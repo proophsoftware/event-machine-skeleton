@@ -12,3 +12,4 @@ composer.lock
 data/*
 !data/.gitkeep
 src/Example/*
+bin/example.php

@@ -16,6 +16,7 @@ use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Pdo\PersistenceStrategy;
 use Prooph\EventStore\Pdo\PostgresEventStore;
 use Prooph\EventStore\TransactionalActionEventEmitterEventStore;
+use Prooph\ServiceBus\CommandBus;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -50,12 +51,21 @@ class AppConfiguration
 
     /**
      * @Bean
+     * @Parameters({
+     *  @Parameter({"name" = "config.event_machine.descriptions"})
+     * })
+     * @param array $descriptions
      * @return EventMachine
      */
-    public function eventMachine(): EventMachine
+    public function eventMachine(array $descriptions = []): EventMachine
     {
         //@TODO add config param to enable caching
         $eventMachine = new EventMachine();
+
+        //Load descriptions here or add them to config/autoload/global.php
+        foreach ($descriptions as $desc) {
+            $eventMachine->load($desc);
+        }
 
         $containerChain = new ContainerChain(
             $this->container(),
@@ -109,5 +119,14 @@ class AppConfiguration
             $eventStore,
             new ProophActionEventEmitter(TransactionalActionEventEmitterEventStore::ALL_EVENTS)
         );
+    }
+
+    /**
+     * @Bean({"alias" = "Prooph\ServiceBus\CommandBus"})
+     * @return CommandBus
+     */
+    public function commandBus(): CommandBus
+    {
+        return new CommandBus();
     }
 }
