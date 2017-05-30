@@ -3,11 +3,14 @@ declare(strict_types = 1);
 
 namespace App\Config;
 
+use App\Infrastructure\Logger\PsrErrorLogger;
 use bitExpert\Disco\Annotations\Bean;
 use bitExpert\Disco\Annotations\Configuration;
 use bitExpert\Disco\Annotations\Parameter;
 use bitExpert\Disco\Annotations\Parameters;
 use bitExpert\Disco\BeanFactoryRegistry;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Prooph\Common\Event\ProophActionEventEmitter;
 use Prooph\EventMachine\Container\ContainerChain;
 use Prooph\EventMachine\Container\EventMachineContainer;
@@ -18,6 +21,10 @@ use Prooph\EventStore\Pdo\PostgresEventStore;
 use Prooph\EventStore\TransactionalActionEventEmitterEventStore;
 use Prooph\ServiceBus\CommandBus;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+use Zend\Diactoros\Response;
+use Zend\Stratigility\Middleware\ErrorHandler;
+use Zend\Stratigility\Middleware\ErrorResponseGenerator;
 
 /**
  * Class AppConfiguration
@@ -119,5 +126,36 @@ class AppConfiguration
     public function commandBus(): CommandBus
     {
         return new CommandBus();
+    }
+
+    /**
+     * @Bean
+     * @Parameters({
+     *  @Parameter({"name" = "config.environment"})
+     * })
+     * @param string $environment
+     * @return ErrorHandler
+     */
+    public function httpErrorHandler($environment = 'prod'): ErrorHandler
+    {
+        $errorHandler = new ErrorHandler(
+            new Response(),
+            new ErrorResponseGenerator($environment === 'dev')
+        );
+
+        $errorHandler->attachListener(new PsrErrorLogger($this->logger()));
+
+        return $errorHandler;
+    }
+
+    /**
+     * @Bean
+     * @return LoggerInterface
+     */
+    public function logger(): LoggerInterface
+    {
+        $streamHandler = new StreamHandler('php://stderr');
+
+        return new Logger([$streamHandler]);
     }
 }

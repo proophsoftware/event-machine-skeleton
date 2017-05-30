@@ -16,6 +16,8 @@ services:
     volumes:
       - .:/var/www
     environment:
+     # Set PROOPH_ENV=prod for production
+      - PROOPH_ENV=dev
       - PDO_DSN=pgsql:host=postgres port=5432 dbname=event_machine
       - PDO_USER=postgres
       - PDO_PWD=
