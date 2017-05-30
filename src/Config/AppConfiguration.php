@@ -29,15 +29,6 @@ class AppConfiguration
 {
     /**
      * @Bean
-     * @return ContainerInterface
-     */
-    protected function container(): ContainerInterface
-    {
-        return BeanFactoryRegistry::getInstance();
-    }
-
-    /**
-     * @Bean
      * @Parameters({
      *  @Parameter({"name" = "config"})
      * })
@@ -68,7 +59,7 @@ class AppConfiguration
         }
 
         $containerChain = new ContainerChain(
-            $this->container(),
+            BeanFactoryRegistry::getInstance(),
             new EventMachineContainer($eventMachine)
         );
 
