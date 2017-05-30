@@ -15,7 +15,7 @@ require_once 'vendor/autoload.php';
 $container = require 'config/container.php';
 
 /** @var EventStore $eventStore */
-$eventStore = $container->get(EventStore::class);
+$eventStore = $container->get('EventMachine.EventStore');
 
 $eventStore->create(new Stream(new StreamName('event_stream'), new ArrayIterator()));
 

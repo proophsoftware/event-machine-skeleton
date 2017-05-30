@@ -9,6 +9,7 @@ use bitExpert\Disco\Annotations\Configuration;
 use bitExpert\Disco\Annotations\Parameter;
 use bitExpert\Disco\Annotations\Parameters;
 use bitExpert\Disco\BeanFactoryRegistry;
+use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Prooph\Common\Event\ProophActionEventEmitter;
@@ -19,7 +20,9 @@ use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Pdo\PersistenceStrategy;
 use Prooph\EventStore\Pdo\PostgresEventStore;
 use Prooph\EventStore\TransactionalActionEventEmitterEventStore;
+use Prooph\Psr7Middleware\MessageMiddleware;
 use Prooph\ServiceBus\CommandBus;
+use Prooph\ServiceBus\EventBus;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Zend\Diactoros\Response;
@@ -77,6 +80,15 @@ class AppConfiguration
 
     /**
      * @Bean
+     * @return MiddlewareInterface
+     */
+    public function eventMachineHttpMessageBox(): MiddlewareInterface
+    {
+        return $this->eventMachine()->httpMessageBox();
+    }
+
+    /**
+     * @Bean
      * @Parameters({
      *  @Parameter({"name" = "config.pdo.dsn"}),
      *  @Parameter({"name" = "config.pdo.user"}),
@@ -102,7 +114,7 @@ class AppConfiguration
     }
 
     /**
-     * @Bean({"alias"="Prooph\EventStore\EventStore"})
+     * @Bean({"alias"="EventMachine.EventStore"})
      * @return EventStore
      */
     public function eventStore(): EventStore
@@ -120,12 +132,21 @@ class AppConfiguration
     }
 
     /**
-     * @Bean({"alias" = "Prooph\ServiceBus\CommandBus"})
+     * @Bean({"alias" = "EventMachine.CommandBus"})
      * @return CommandBus
      */
     public function commandBus(): CommandBus
     {
         return new CommandBus();
+    }
+
+    /**
+     * @Bean({"alias" = "EventMachine.EventBus"})
+     * @return EventBus
+     */
+    public function eventBus(): EventBus
+    {
+        return new EventBus();
     }
 
     /**
