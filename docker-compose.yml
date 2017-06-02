@@ -16,6 +16,7 @@ services:
     volumes:
       - .:/var/www
     environment:
+     #@TODO: move to app.env file
      # Set PROOPH_ENV=prod for production
       - PROOPH_ENV=dev
       - PDO_DSN=pgsql:host=postgres port=5432 dbname=event_machine
@@ -23,6 +24,24 @@ services:
       - PDO_PWD=
       - MONGO_SERVER=mongodb://mongodb:27017
       - MONGO_DB_NAME=event_machine
+
+  aggregate_projection:
+      image: prooph/php:7.1-cli
+      volumes:
+        - .:/app
+      depends_on:
+        - postgres
+        - mongodb
+      command: php /app/bin/aggregate_projection.php
+      environment:
+       #@TODO: move to app.env file
+       # Set PROOPH_ENV=prod for production
+        - PROOPH_ENV=dev
+        - PDO_DSN=pgsql:host=postgres port=5432 dbname=event_machine
+        - PDO_USER=postgres
+        - PDO_PWD=
+        - MONGO_SERVER=mongodb://mongodb:27017
+        - MONGO_DB_NAME=event_machine
 
   rabbit:
     image: rabbitmq:3-management

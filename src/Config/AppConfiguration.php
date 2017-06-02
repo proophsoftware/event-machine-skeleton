@@ -4,12 +4,15 @@ declare(strict_types = 1);
 namespace App\Config;
 
 use App\Infrastructure\Logger\PsrErrorLogger;
+use App\Infrastructure\MongoDb\AggregateReadModel;
+use App\Infrastructure\MongoDb\MongoConnection;
 use bitExpert\Disco\Annotations\Bean;
 use bitExpert\Disco\Annotations\Configuration;
 use bitExpert\Disco\Annotations\Parameter;
 use bitExpert\Disco\Annotations\Parameters;
 use bitExpert\Disco\BeanFactoryRegistry;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use MongoDB\Client;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Prooph\Common\Event\ProophActionEventEmitter;
@@ -19,6 +22,8 @@ use Prooph\EventMachine\EventMachine;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Pdo\PersistenceStrategy;
 use Prooph\EventStore\Pdo\PostgresEventStore;
+use Prooph\EventStore\Pdo\Projection\PostgresProjectionManager;
+use Prooph\EventStore\Projection\ProjectionManager;
 use Prooph\EventStore\TransactionalActionEventEmitterEventStore;
 use Prooph\Psr7Middleware\MessageMiddleware;
 use Prooph\ServiceBus\CommandBus;
@@ -106,6 +111,22 @@ class AppConfiguration
 
     /**
      * @Bean
+     * @Parameters({
+     *  @Parameter({"name" = "config.mongo.server"}),
+     *  @Parameter({"name" = "config.mongo.db"}),
+     * })
+     * @param string $server
+     * @param string $db
+     * @return MongoConnection
+     */
+    public function mongoConnection(string $server = '', string $db = ''): MongoConnection
+    {
+        $client = new Client($server);
+        return new MongoConnection($client, $db);
+    }
+
+    /**
+     * @Bean
      * @return PersistenceStrategy
      */
     protected function eventStorePersistenceStrategy(): PersistenceStrategy
@@ -132,6 +153,18 @@ class AppConfiguration
     }
 
     /**
+     * @Bean
+     * @return ProjectionManager
+     */
+    public function projectionManager(): ProjectionManager
+    {
+        return new PostgresProjectionManager(
+            $this->eventStore(),
+            $this->pdoConnection()
+        );
+    }
+
+    /**
      * @Bean({"alias" = "EventMachine.CommandBus"})
      * @return CommandBus
      */
@@ -147,6 +180,15 @@ class AppConfiguration
     public function eventBus(): EventBus
     {
         return new EventBus();
+    }
+
+    /**
+     * @Bean
+     * @return AggregateReadModel
+     */
+    public function aggregateReadModel(): AggregateReadModel
+    {
+        return new AggregateReadModel($this->mongoConnection(), $this->eventMachine());
     }
 
     /**

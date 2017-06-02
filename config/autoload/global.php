@@ -10,6 +10,10 @@ return [
         'user' => getenv('PDO_USER'),
         'pwd' => getenv('PDO_PWD'),
     ],
+    'mongo' => [
+        'server' => getenv('MONGO_SERVER'),
+        'db' => getenv('MONGO_DB_NAME'),
+    ],
     'event_machine' => [
         'descriptions' => []
     ]
