@@ -70,16 +70,9 @@ in the background. It is recommended to run each prooph event store projection a
 Event Machine skeleton gives you an idea how such a projection can look like. Checkout the `docker-compose.yml` and 
 `bin/aggregate_projection.php` for details. 
 
-*Note: At the moment you have to restart the projection docker container by hand if you register a new event to event machine.
-The projection will stop working in that case because it receives a new event that is not yet known in the running process.
-We are working on a "hot reload" feature to avoid this hassle.*
-
 If you've followed the quick start you can connect to the MongoDB container (f.e. with mongoDB PHPStorm plugin and default connection settings)
 and should find a database called `èvent_machine` with a collection `aggregate_user` and a document that has the user id as
 document `_id` and all properties set. 
-
-*If you don't see the db or collection just perform docker-compose up -d again to restart the projection container. 
-One moment later you can refresh MongoDB and should see the described data.*
 
 The projection uses the `aggregate type` (in the example it is `User`), normalizes the type and prefixes it with `aggregate_`.
 
@@ -89,9 +82,9 @@ The `aggregate state` is turned into the document itself. Event Machine does not
 is used but an object would also be possible. See [the example](https://github.com/proophsoftware/event-machine/blob/master/examples/Aggregate/UserDescription.php#L60) 
 shipped with Event Machine for an alternative approach (If you prefer value objects use them!).
 
-**Make sure that the MongoDB extension is able to [persist](http://php.net/manual/de/mongodb.persistence.php) the state**
+**Make sure that the MongoDB driver is able to [persist](http://php.net/manual/de/mongodb.persistence.php) the state**
 
-*Note: You can of course deactivate the projection, if you don't like it. Remember batteries are included. 
+*Note: You can of course deactivate the projection, if you don't like it or need different behaviour. Remember batteries are included. 
 And of course you can add your own projections and use another database than MongoDB as storage system.*
 
 ### RabbitMQ messaging and web sockets
