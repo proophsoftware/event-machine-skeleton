@@ -21,6 +21,8 @@ $app->pipe($container->get('httpErrorHandler'));
 
 $app->pipe(new \Zend\Expressive\Helper\BodyParams\BodyParamsMiddleware());
 
+$app->pipe(new \App\Http\OriginalUriMiddleware());
+
 $app->pipe('/api', function (Request $req, Delegate $delegate) use($container) {
     /** @var FastRoute\Dispatcher $router */
     $router = require 'config/api_router.php';

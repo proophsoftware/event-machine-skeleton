@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace App\Config;
 
+use App\Http\MessageSchemaMiddleware;
 use App\Infrastructure\Logger\PsrErrorLogger;
 use App\Infrastructure\MongoDb\AggregateReadModel;
 use App\Infrastructure\MongoDb\MongoConnection;
@@ -90,6 +91,15 @@ class AppConfiguration
     public function eventMachineHttpMessageBox(): MiddlewareInterface
     {
         return $this->eventMachine()->httpMessageBox();
+    }
+
+    /**
+     * @Bean
+     * @return MiddlewareInterface
+     */
+    public function eventMachineHttpMessageSchema(): MiddlewareInterface
+    {
+        return new MessageSchemaMiddleware($this->eventMachine());
     }
 
     /**

@@ -13,4 +13,10 @@ return \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $r) {
         '/messagebox/{message_name:[A-Za-z0-9_.-\/]+}',
         'eventMachineHttpMessageBox'
     );
+
+    $r->addRoute(
+        ['GET'],
+        '/messagebox-schema',
+        'eventMachineHttpMessageSchema'
+    );
 });
