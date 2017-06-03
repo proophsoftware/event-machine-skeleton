@@ -93,6 +93,7 @@ final class AggregateReadModel extends AbstractReadModel
     }
 
     private function convertAggregateTypeToCollectionName(string $aggregateType): string {
-        return self::COLLECTION_PREFIX . mb_strtolower(preg_replace('/[^A-Za-z0-9]/', '_', $aggregateType));
+        $snake_case_aggregate_type = preg_replace('/(?<!^)[A-Z]/', '_$0', $aggregateType);
+        return self::COLLECTION_PREFIX . mb_strtolower(preg_replace('/[^A-Za-z0-9]/', '_', $snake_case_aggregate_type));
     }
 }
