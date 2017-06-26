@@ -8,7 +8,6 @@ nbproject
 .project
 .settings
 vendor
-composer.lock
 data/*
 !data/.gitkeep
 src/Example/*
