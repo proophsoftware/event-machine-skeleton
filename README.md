@@ -6,6 +6,7 @@ Please make sure you have installed [Docker](https://docs.docker.com/engine/inst
 
 ```bash
 $ docker run --rm -it -v $(pwd):/app prooph/composer:7.1 create-project proophsoftware/event-machine-skeleton
+$ cd event-machine-skeleton
 $ sudo chown $(id -u -n):$(id -g -n) . -R
 $ docker-compose up -d
 $ docker-compose run php php scripts/create_event_stream.php
