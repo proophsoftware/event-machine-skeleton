@@ -23,7 +23,7 @@ Let's register a user in our new application. It is a small example that already
 5. Send the "App.RegisterUser" request
 6. Event Machine should return a 202 Accepted response with an empty body
 7. Have a look at the postgres db, see `docker-compose.yml` of the skeleton for login credentials
-8. The table starting with _ followed by a sha1 hash is your "event_stream" table. You should see a new `Àpp.UserWasRegistered` event in it.
+8. The table starting with _ followed by a sha1 hash is your "event_stream" table. You should see a new `App.UserWasRegistered` event in it.
 9. Test also the "App.ChangeUsername" request
 10. Exercise: Implement the "App.ChangeEmail" use case
 
@@ -50,15 +50,15 @@ the linked gist.
 ```php
 $eventMachine
 //...
-->apply(function (array $userWasRegistered) {
-    $userState = $userWasRegistered;
+->apply(function (Message $userWasRegistered) {
+    $userState = $userWasRegistered->payload();
     return $userState;
 });
 
 $eventMachine
 //...
-->apply(function(array $userState, array $usernameWasChanged) {
-    $userState['username'] = $usernameWasChanged['newUsername'];
+->apply(function(array $userState, Message $usernameWasChanged) {
+    $userState['username'] = $usernameWasChanged->payload()['newUsername'];
     return $userState;
 });
 ```
@@ -69,7 +69,7 @@ Event Machine skeleton gives you an idea how such a projection can look like. Ch
 `bin/aggregate_projection.php` for details. 
 
 If you've followed the quick start you can connect to the MongoDB container (f.e. with mongoDB PHPStorm plugin and default connection settings)
-and should find a database called `èvent_machine` with a collection `aggregate_user` and a document that has the user id as
+and should find a database called `event_machine` with a collection `aggregate_user` and a document that has the user id as
 document `_id` and all properties set. 
 
 The projection uses the `aggregate type` (in the example it is `User`), normalizes the type and prefixes it with `aggregate_`.
