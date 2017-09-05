@@ -87,4 +87,17 @@ And of course you can add your own projections and use another database than Mon
 
 ### RabbitMQ messaging and web sockets
 
-tbd
+Event machine ships with a preconfigured rabbitmq docker container using the dev image `prooph/rabbitmq`.
+A [Humus\AmqpMessageProducer](https://github.com/prooph/humus-amqp-producer) is ready to use (for development) to forward messages
+via websocket to a JavaScript consumer. An example consumer is shown in `public/ws.html`.
+
+To test the rabbitmq + websocket set up you can open `http://localhost:8080/ws.html` in a browser and use the browser debug console
+to check if a connection to the websocket endpoint under `wss://localhost:15691/ws` can be established.
+If you see the stomp client pinging the websocket endpoint everything is fine and you can send some messages from event machine to the client.
+
+A use case is prepared. Send the `Àpp.ChangeUsername` request again. If you get a 202 response in postman check the browser console
+and you should find a `UsernameWasChanged` event. How cool is that?
+
+You could now combine that with your favorite JavaScript framework and directly react on event machine events in the client.
+
+*Note: Events are not forwarded to the client automatically. In the [UserDescription](https://gist.github.com/codeliner/20c3944195d0c60ceb2a4bbe6d3d2638#file-userdescription-php-L79) you can find an example how forwarding is set up per event.*

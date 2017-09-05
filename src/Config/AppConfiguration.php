@@ -17,6 +17,7 @@ use MongoDB\Client;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Prooph\Common\Event\ProophActionEventEmitter;
+use Prooph\Common\Messaging\NoOpMessageConverter;
 use Prooph\EventMachine\Container\ContainerChain;
 use Prooph\EventMachine\Container\EventMachineContainer;
 use Prooph\EventMachine\EventMachine;
@@ -26,10 +27,9 @@ use Prooph\EventStore\Pdo\PostgresEventStore;
 use Prooph\EventStore\Pdo\Projection\PostgresProjectionManager;
 use Prooph\EventStore\Projection\ProjectionManager;
 use Prooph\EventStore\TransactionalActionEventEmitterEventStore;
-use Prooph\Psr7Middleware\MessageMiddleware;
 use Prooph\ServiceBus\CommandBus;
 use Prooph\ServiceBus\EventBus;
-use Psr\Container\ContainerInterface;
+use Prooph\ServiceBus\Message\HumusAmqp\AmqpMessageProducer;
 use Psr\Log\LoggerInterface;
 use Zend\Diactoros\Response;
 use Zend\Stratigility\Middleware\ErrorHandler;
@@ -199,6 +199,38 @@ class AppConfiguration
     public function aggregateReadModel(): AggregateReadModel
     {
         return new AggregateReadModel($this->mongoConnection(), $this->eventMachine());
+    }
+
+    /**
+     * @Bean
+     * @Parameters({
+     *  @Parameter({"name" = "config.rabbit.connection"}),
+     *  @Parameter({"name" = "config.rabbit.ui_exchange"}),
+     * })
+     * @return AmqpMessageProducer
+     */
+    public function uiExchange(array $connection = [], string $uiExchange = 'ui-exchange'): AmqpMessageProducer
+    {
+        $connection = new \Humus\Amqp\Driver\AmqpExtension\Connection($connection);
+
+        $connection->connect();
+
+        $channel = $connection->newChannel();
+
+        $exchange = $channel->newExchange();
+
+        $exchange->setName($uiExchange);
+
+        $exchange->setType('fanout');
+
+        $humusProducer = new \Humus\Amqp\JsonProducer($exchange);
+
+        $messageProducer = new \Prooph\ServiceBus\Message\HumusAmqp\AmqpMessageProducer(
+            $humusProducer,
+            new NoOpMessageConverter()
+        );
+
+        return $messageProducer;
     }
 
     /**

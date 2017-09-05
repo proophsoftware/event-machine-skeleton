@@ -1,0 +1,26 @@
+<doctype html />
+<html>
+<head></head>
+<body><h1>test</h1>
+<script src="stomp.min.js"></script>
+<script>
+    // Stomp.js boilerplate
+    var client = Stomp.client('wss://' + window.location.hostname + ':15691/ws');
+
+    var on_connect = function(x) {
+        id = client.subscribe("ui-queue", function(d) {
+            console.log("received message", d.body);
+        });
+    };
+    var on_error =  function() {
+        console.log('error');
+    };
+    client.connect('event-machine', 'event-machine', on_connect, on_error, '/event-machine');
+
+    window.setTimeout(function () {
+        console.log("send test");
+        //client.send('/topic/ui-exchange', {"content-type":"text/plain"}, "it works");
+    }, 1000);
+</script>
+</body>
+</html>

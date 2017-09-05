@@ -47,10 +47,13 @@ services:
         - MONGO_DB_NAME=event_machine
 
   rabbit:
-    image: rabbitmq:3-management
+    image: prooph/rabbitmq
     ports:
-      - 8081:15672
-      - 15674:15674
+      - 8081:15671
+      - 15691:15691
+    volumes:
+      - ./env/rabbit/broker_definitions.json:/opt/definitions.json:ro
+      - ./env/rabbit/rabbitmq.config:/etc/rabbitmq/rabbitmq-prooph.config
 
   postgres:
     image: postgres:alpine

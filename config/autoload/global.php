@@ -14,6 +14,21 @@ return [
         'server' => getenv('MONGO_SERVER'),
         'db' => getenv('MONGO_DB_NAME'),
     ],
+    'rabbit' => [
+        'connection' => [
+            'host' => getenv('RABBIT_HOST')?: 'rabbit',
+            'port' => (int)getenv('RABBIT_PORT')?: 5672,
+            'login' => getenv('RABBIT_USER')?: 'event-machine',
+            'password' => getenv('RABBIT_PWD')?: 'event-machine',
+            'vhost' => getenv('RABBIT_VHOST')?: '/event-machine',
+            'persistent' => (bool)getenv('RABBIT_PERSISTENT')?: false,
+            'read_timeout' => (int)getenv('RABBIT_READ_TIMEOUT')?: 1, //sec, float allowed
+            'write_timeout' => (int)getenv('RABBIT_WRITE_TIMEOUT')?: 1, //sec, float allowed,
+            'heartbeat' => (int)getenv('RABBIT_HEARTBEAT')?: 0,
+            'verify' => false
+        ],
+        'ui_exchange' => getenv('RABBIT_UI_EXCHANGE')?: 'ui-exchange',
+    ],
     'event_machine' => [
         'descriptions' => []
     ]
