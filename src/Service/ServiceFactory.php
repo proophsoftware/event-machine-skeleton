@@ -110,7 +110,12 @@ final class ServiceFactory
         return $this->makeSingleton(MongoConnection::class, function () {
             $this->assertMandatoryConfigExists('mongo.server');
             $this->assertMandatoryConfigExists('mongo.db');
-            $client = new Client($this->config->stringValue('mongo.server'));
+            $client = new Client(
+                $this->config->stringValue('mongo.server'),
+                [],
+                //force usage of assoc instead of stdClass objects when returning data from mongodb
+                ['typeMap' => ['root' => 'array', 'document' => 'array', 'array' => 'array']]
+            );
             return new MongoConnection($client, $this->config->stringValue('mongo.db'));
         });
     }
