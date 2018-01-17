@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Interop\Http\ServerMiddleware\DelegateInterface as Delegate;
 
 chdir(dirname(__DIR__));
 
@@ -13,24 +12,28 @@ require 'vendor/autoload.php';
 $container = include 'config/container.php';
 
 //Note: this is important and needs to happen before further dependencies are pulled
-$container->get('eventMachine')->bootstrap();
+$env = getenv('PROOPH_ENV')?: 'prod';
+$devMode = $env === \Prooph\EventMachine\EventMachine::ENV_DEV;
+$container->get(\Prooph\EventMachine\EventMachine::class)->bootstrap($env, $devMode);
 
 $app = new \Zend\Stratigility\MiddlewarePipe();
 
-$app->pipe($container->get('httpErrorHandler'));
+$app->setResponsePrototype(new \Zend\Diactoros\Response());
+
+$app->pipe($container->get(\Zend\Stratigility\Middleware\ErrorHandler::class));
 
 $app->pipe(new \Zend\Expressive\Helper\BodyParams\BodyParamsMiddleware());
 
 $app->pipe(new \App\Http\OriginalUriMiddleware());
 
-$app->pipe('/api', function (Request $req, Delegate $delegate) use($container) {
+$app->pipe('/api', function (Request $req) use($container) {
     /** @var FastRoute\Dispatcher $router */
     $router = require 'config/api_router.php';
 
     $route = $router->dispatch($req->getMethod(), $req->getUri()->getPath());
 
     if ($route[0] === FastRoute\Dispatcher::NOT_FOUND) {
-        return $delegate->process($req);
+        return new \Zend\Diactoros\Response\EmptyResponse(404);
     }
 
     if ($route[0] === FastRoute\Dispatcher::METHOD_NOT_ALLOWED) {
@@ -45,18 +48,16 @@ $app->pipe('/api', function (Request $req, Delegate $delegate) use($container) {
         throw new \RuntimeException("Http handler not found. Got " . $route[1]);
     }
 
-    /** @var \Interop\Http\ServerMiddleware\MiddlewareInterface $httpHandler */
+    /** @var \Interop\Http\Server\RequestHandlerInterface $httpHandler */
     $httpHandler = $container->get($route[1]);
 
-    return $httpHandler->process($req, $delegate);
+    return $httpHandler->handle($req);
 });
 
-$app->pipe('/', function (Request $request, Delegate $delegate): Response {
+$app->pipe('/', function (Request $request): Response {
     //@TODO add homepage with infos about event-machine and the skeleton
     return new \Zend\Diactoros\Response\TextResponse("It works");
 });
-
-
 
 $server = \Zend\Diactoros\Server::createServer(
     $app,

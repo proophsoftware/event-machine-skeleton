@@ -19,4 +19,4 @@ $eventStore = $container->get('EventMachine.EventStore');
 
 $eventStore->create(new Stream(new StreamName('event_stream'), new ArrayIterator()));
 
-echo 'done.';
+echo "done.\n";

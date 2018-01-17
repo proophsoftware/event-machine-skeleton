@@ -3,15 +3,14 @@ declare(strict_types = 1);
 
 namespace App\Http;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use Prooph\EventMachine\EventMachine;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Zend\Diactoros\Response\JsonResponse;
-use Zend\Diactoros\Response\TextResponse;
 
-final class MessageSchemaMiddleware implements MiddlewareInterface
+final class MessageSchemaMiddleware implements RequestHandlerInterface
 {
     /**
      * @var EventMachine
@@ -23,10 +22,15 @@ final class MessageSchemaMiddleware implements MiddlewareInterface
         $this->eventMachine = $eventMachine;
     }
 
+
     /**
-     * @inheritdoc
+     * Handle the request and return a response.
+     *
+     * @param ServerRequestInterface $request
+     *
+     * @return ResponseInterface
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function handle(ServerRequestInterface $request)
     {
         /** @var UriInterface $uri */
         $uri = $request->getAttribute('original_uri', $request->getUri());

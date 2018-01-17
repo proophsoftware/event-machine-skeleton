@@ -3,7 +3,21 @@ declare(strict_types = 1);
 
 $config = include 'config.php';
 
-$beanFactory = new \bitExpert\Disco\AnnotationBeanFactory(\App\Config\AppConfiguration::class, ['config' => $config]);
-\bitExpert\Disco\BeanFactoryRegistry::register($beanFactory);
+$serviceFactory = new \App\Service\ServiceFactory($config);
 
-return $beanFactory;
+//@TODO use cached serviceFactoryMap for production
+$container = new \Prooph\EventMachine\Container\ReflectionBasedContainer(
+    $serviceFactory,
+    [
+        \Prooph\EventMachine\EventMachine::SERVICE_ID_EVENT_STORE => \Prooph\EventStore\EventStore::class,
+        \Prooph\EventMachine\EventMachine::SERVICE_ID_PROJECTION_MANAGER => \Prooph\EventStore\Projection\ProjectionManager::class,
+        \Prooph\EventMachine\EventMachine::SERVICE_ID_COMMAND_BUS => \Prooph\ServiceBus\CommandBus::class,
+        \Prooph\EventMachine\EventMachine::SERVICE_ID_EVENT_BUS => \Prooph\ServiceBus\EventBus::class,
+        \Prooph\EventMachine\EventMachine::SERVICE_ID_QUERY_BUS => \Prooph\ServiceBus\QueryBus::class,
+        \Prooph\EventMachine\EventMachine::SERVICE_ID_DOCUMENT_STORE => \Prooph\EventMachine\Persistence\DocumentStore::class,
+    ]
+);
+
+$serviceFactory->setContainer($container);
+
+return $container;
