@@ -24,7 +24,6 @@ services:
         - .:/app
       depends_on:
         - postgres
-        - mongodb
       command: php /app/bin/event_machine_projection.php
       # Needed so that projection is automatically restarted when new events are registered in event machine
       # which are not yet known in the long-running projection process, see https://github.com/proophsoftware/event-machine-skeleton/issues/3
