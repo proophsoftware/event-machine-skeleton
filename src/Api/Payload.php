@@ -1,0 +1,33 @@
+<?php
+/**
+ * This file is part of the proophsoftware/event-machine-skeleton.
+ * (c) 2018 prooph software GmbH <contact@prooph.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace App\Api;
+
+interface Payload
+{
+    /**
+     * It is recommended to define all possible message payload keys as constants instead of using strings in your code.
+     * This makes it easy to find all places in the source code that work with the payload.
+     *
+     * @example
+     *
+     * const USER_ID = 'userId';
+     * const USERNAME = 'username';
+     *
+     * Let's say you have a Command::REGISTER_USER and you want to get the USERNAME from the command payload:
+     *
+     * $username = $registerUser->get(Payload::USERNAME); //This is readable and eases refactoring in a larger code base.
+     */
+
+    //Predefined keys for query payloads, see App\Api\Schema::queryPagination() for further information
+    const SKIP = 'skip';
+    const LIMIT = 'limit';
+}
