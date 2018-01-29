@@ -65,7 +65,7 @@ You know the headline from Docker, right?
 The Event Machine skeleton follows the same principle. It ships with a default set up so that you can start without messing around with configuration and such.
 The default set up is likely not what you want to use in production. The skeleton can be and **should be** adapted.
 
-Focus of the skeleton is to provide *an easy to use development environment*, hence it uses default settings of Postgres, MongoDB and RabbitMQ containers.
+Focus of the skeleton is to provide *an easy to use development environment*, hence it uses default settings of Postgres and RabbitMQ containers.
 **Make sure to secure the containers before you deploy them anywhere!** You should build and use your own docker containers in production anyway.
 And if you cannot or don't want to use Docker then provide the needed infrastructure the way you prefer and just point event machine to it by adjusting configuration.
 
@@ -74,7 +74,7 @@ And if you cannot or don't want to use Docker then provide the needed infrastruc
 Event Machine skeleton uses prooph's [Postgres event store](https://github.com/prooph/pdo-event-store) by default. 
 It is fully set up with transaction management and event publishing after transaction commit (done by Event Machine).
  
-### MongoDB Projections
+### Projections
 
 Event Machine ships with a neat feature called **aggregate projection**. To explain it we should take a look at the user aggregate description from
 the linked gist.
