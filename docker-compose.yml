@@ -15,15 +15,8 @@ services:
     image: prooph/php:7.1-fpm
     volumes:
       - .:/var/www
-    environment:
-     #@TODO: move to app.env file
-     # Set PROOPH_ENV=prod for production
-      - PROOPH_ENV=dev
-      - PDO_DSN=pgsql:host=postgres port=5432 dbname=event_machine
-      - PDO_USER=postgres
-      - PDO_PWD=
-      - MONGO_SERVER=mongodb://mongodb:27017
-      - MONGO_DB_NAME=event_machine
+    env_file:
+      - ./app.env
 
   event_machine_projection:
       image: prooph/php:7.1-cli
@@ -36,15 +29,8 @@ services:
       # Needed so that projection is automatically restarted when new events are registered in event machine
       # which are not yet known in the long-running projection process, see https://github.com/proophsoftware/event-machine-skeleton/issues/3
       restart: on-failure
-      environment:
-       #@TODO: move to app.env file
-       # Set PROOPH_ENV=prod for production
-        - PROOPH_ENV=dev
-        - PDO_DSN=pgsql:host=postgres port=5432 dbname=event_machine
-        - PDO_USER=postgres
-        - PDO_PWD=
-        - MONGO_SERVER=mongodb://mongodb:27017
-        - MONGO_DB_NAME=event_machine
+      env_file:
+        - ./app.env
 
   rabbit:
     image: prooph/rabbitmq
@@ -54,17 +40,19 @@ services:
     volumes:
       - ./env/rabbit/broker_definitions.json:/opt/definitions.json:ro
       - ./env/rabbit/rabbitmq.config:/etc/rabbitmq/rabbitmq-prooph.config
+    env_file:
+      - ./app.env
 
   postgres:
     image: postgres:alpine
     ports:
       - 5432:5432
-    environment:
-      - POSTGRES_DB=event_machine
+    env_file:
+      - ./app.env
     volumes:
       - ./env/postgres/initdb.d:/docker-entrypoint-initdb.d:ro
+      - data-postgres:/var/lib/postgresql/data
 
-  mongodb:
-    image: mongo
-    ports:
-      - 27017:27017
+volumes:
+  data-postgres:
+    driver: local

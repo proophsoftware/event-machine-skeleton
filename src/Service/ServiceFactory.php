@@ -11,11 +11,7 @@ namespace App\Service;
 
 use App\Http\MessageSchemaMiddleware;
 use App\Infrastructure\Logger\PsrErrorLogger;
-use App\Infrastructure\MongoDb\AggregateReadModel;
-use App\Infrastructure\MongoDb\MongoConnection;
-use App\Infrastructure\MongoDb\MongoDocumentStore;
 use Codeliner\ArrayReader\ArrayReader;
-use MongoDB\Client;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Prooph\Common\Event\ProophActionEventEmitter;
@@ -27,6 +23,7 @@ use Prooph\EventMachine\EventMachine;
 use Prooph\EventMachine\GraphQL\Server;
 use Prooph\EventMachine\Http\MessageBox;
 use Prooph\EventMachine\Persistence\DocumentStore;
+use Prooph\EventMachine\Postgres\PostgresDocumentStore;
 use Prooph\EventMachine\Projecting\AggregateProjector;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Pdo\PersistenceStrategy;
@@ -105,21 +102,6 @@ final class ServiceFactory
         });
     }
 
-    public function mongoConnection(): MongoConnection
-    {
-        return $this->makeSingleton(MongoConnection::class, function () {
-            $this->assertMandatoryConfigExists('mongo.server');
-            $this->assertMandatoryConfigExists('mongo.db');
-            $client = new Client(
-                $this->config->stringValue('mongo.server'),
-                [],
-                //force usage of assoc instead of stdClass objects when returning data from mongodb
-                ['typeMap' => ['root' => 'array', 'document' => 'array', 'array' => 'array']]
-            );
-            return new MongoConnection($client, $this->config->stringValue('mongo.db'));
-        });
-    }
-
     protected function eventStorePersistenceStrategy(): PersistenceStrategy
     {
         return $this->makeSingleton(PersistenceStrategy::class, function () {
@@ -146,7 +128,11 @@ final class ServiceFactory
     public function documentStore(): DocumentStore
     {
         return $this->makeSingleton(DocumentStore::class, function () {
-            return new MongoDocumentStore($this->mongoConnection());
+            return new PostgresDocumentStore(
+                $this->pdoConnection(),
+                null,
+                'CHAR(36) NOT NULL' //Use alternative docId schema, to allow uuids as well as md5 hashes
+            );
         });
     }
 
