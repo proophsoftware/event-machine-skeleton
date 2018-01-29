@@ -111,7 +111,7 @@ To test the rabbitmq + websocket set up you can open `http://localhost:8080/ws.h
 to check if a connection to the websocket endpoint under `wss://localhost:15691/ws` can be established.
 If you see the stomp client pinging the websocket endpoint everything is fine and you can send some messages from event machine to the client.
 
-A use case is prepared. Send the `Àpp.ChangeUsername` request again. If you get a 202 response in postman check the browser console
+A use case is prepared. Send the `ChangeUsername` request again. If you get a 202 response in postman or a success response in GraphQL check the browser console
 and you should find a `UsernameWasChanged` event. How cool is that?
 
 You could now combine that with your favorite JavaScript framework and directly react on event machine events in the client.
