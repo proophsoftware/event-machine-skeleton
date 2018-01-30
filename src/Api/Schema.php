@@ -1,11 +1,4 @@
 <?php
-/**
- * This file is part of the proophsoftware/event-machine-skeleton.
- * (c) 2018 prooph software GmbH <contact@prooph.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 declare(strict_types=1);
 
@@ -55,6 +48,7 @@ class Schema
      * Common schema definitions that are useful in nearly any application.
      * Add more or remove unneeded depending on project needs.
      */
+    const TYPE_HEALTH_CHECK = 'HealthCheck';
 
     public static function queryPagination(): array
     {
@@ -73,6 +67,13 @@ class Schema
     {
         return JsonSchema::string([
             'pattern' => '^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$'
+        ]);
+    }
+
+    public static function healthCheckType(): array
+    {
+        return JsonSchema::object([
+            'system' => JsonSchema::boolean()
         ]);
     }
 }

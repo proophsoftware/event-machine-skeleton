@@ -1,16 +1,10 @@
 <?php
-/**
- * This file is part of the proophsoftware/event-machine-skeleton.
- * (c) 2018 prooph software GmbH <contact@prooph.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace App\Service;
 
 use App\Http\MessageSchemaMiddleware;
 use App\Infrastructure\Logger\PsrErrorLogger;
+use App\Infrastructure\System\HealthCheckResolver;
 use Codeliner\ArrayReader\ArrayReader;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -227,6 +221,13 @@ final class ServiceFactory
             $streamHandler = new StreamHandler('php://stderr');
 
             return new Logger('EventMachine', [$streamHandler]);
+        });
+    }
+
+    public function healthCheckResolver(): HealthCheckResolver
+    {
+        return $this->makeSingleton(HealthCheckResolver::class, function () {
+            return new HealthCheckResolver();
         });
     }
 
