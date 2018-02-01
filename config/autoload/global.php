@@ -3,7 +3,11 @@ declare(strict_types = 1);
 
 namespace App\Config;
 
-use App\Infrastructure\System\HealthCheckDescription;
+use App\Api\Aggregate;
+use App\Api\Command;
+use App\Api\Event;
+use App\Api\Query;
+use App\Api\Type;
 
 return [
     'environment' => getenv('PROOPH_ENV')?: 'prod',
@@ -29,7 +33,11 @@ return [
     ],
     'event_machine' => [
         'descriptions' => [
-            HealthCheckDescription::class,
+            Aggregate::class,
+            Command::class,
+            Event::class,
+            Query::class,
+            Type::class,
         ]
     ]
 ];

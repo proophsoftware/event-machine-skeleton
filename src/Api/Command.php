@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Api;
 
-interface Command
+use Prooph\EventMachine\EventMachine;
+use Prooph\EventMachine\EventMachineDescription;
+
+class Command implements EventMachineDescription
 {
     /**
      * Define command names using constants
@@ -19,4 +22,26 @@ interface Command
      *
      * const REGISTER_USER = 'RegisterUser';
      */
+
+
+    /**
+     * @param EventMachine $eventMachine
+     */
+    public static function describe(EventMachine $eventMachine): void
+    {
+        /**
+         * Describe commands of the service and corresponding payload schema (used for input validation)
+         *
+         * @example
+         *
+         * $eventMachine->registerCommand(
+         *      self::REGISTER_USER,  //<-- Name of the  command defined as constant above
+         *      JsonSchema::object([
+         *          Payload::USER_ID => Schema::userId(), //<-- We only work with constants and domain specific reusable schemas
+         *          Payload::USERNAME => Schema::username(), //<-- See App\Api\Payload for property constants ...
+         *          Payload::EMAIL => Schema::email(), //<-- ... and App\Api\Schema for schema definitions
+         *      ])
+         * );
+         */
+    }
 }

@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Api;
 
 
-interface Event
+use Prooph\EventMachine\EventMachine;
+use Prooph\EventMachine\EventMachineDescription;
+
+class Event implements EventMachineDescription
 {
     /**
      * Define event names using constants
@@ -21,4 +24,26 @@ interface Event
      * const EVENT_CONTEXT = 'MyContext.';
      * const USER_REGISTERED = self::EVENT_CONTEXT.'UserRegistered';
      */
+
+    /**
+     * @param EventMachine $eventMachine
+     */
+    public static function describe(EventMachine $eventMachine): void
+    {
+        /**
+         * Describe events produced or consumed by the service and corresponding payload schema (used for input validation)
+         *
+         * @example
+         *
+         * $eventMachine->registerEvent(
+         *      self::USER_REGISTERED,
+         *      JsonSchema::object([
+         *          Payload::USER_ID => Schema::userId(), //<-- We only work with constants and domain specific reusable schemas
+         *          Payload::USERNAME => Schema::username(), //<-- See App\Api\Payload for property constants ...
+         *          Payload::EMAIL => Schema::email(), //<-- ... and App\Api\Schema for schema definitions
+         *                                             // See also App\Api\Command, same schema definitions are used there
+         *      ])
+         * );
+         */
+    }
 }
