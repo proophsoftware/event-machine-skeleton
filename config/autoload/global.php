@@ -33,11 +33,11 @@ return [
     ],
     'event_machine' => [
         'descriptions' => [
-            Aggregate::class,
+            Type::class,
             Command::class,
             Event::class,
             Query::class,
-            Type::class,
+            Aggregate::class,
         ]
     ]
 ];
