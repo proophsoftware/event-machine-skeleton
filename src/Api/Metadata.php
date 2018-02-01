@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Api;
 
-interface Metadata
+class Metadata
 {
     /**
      * If you want to access or set metadata of a message you should define metadata keys as constants.

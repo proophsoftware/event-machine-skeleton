@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Api;
 
-interface Payload
+class Payload
 {
     /**
      * It is recommended to define all possible message payload keys as constants instead of using strings in your code.
