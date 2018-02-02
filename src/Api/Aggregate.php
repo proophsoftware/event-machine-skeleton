@@ -32,6 +32,14 @@ class Aggregate implements EventMachineDescription
             ->recordThat(Event::BUILDING_ADDED)
             ->apply([Building::class, 'whenBuildingAdd']);
 
+        $eventMachine->process(Command::CHECK_IN_USER)
+            ->withExisting(Aggregate::BUILDING)
+            ->handle([Building::class, 'checkInUser'])
+            ->recordThat(Event::USER_CHECKED_IN)
+            ->apply([Building::class, 'whenUserCheckedIn'])
+            ->orRecordThat(Event::DOUBLE_CHECK_IN_DETECTED)
+            ->apply([Building::class, 'whenDoubleCheckInDetected']);
+
         /**
          * Describe how your aggregates handle commands
          *

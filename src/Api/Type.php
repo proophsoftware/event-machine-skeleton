@@ -43,6 +43,7 @@ class Type implements EventMachineDescription
         return JsonSchema::object([
             Payload::BUILDING_ID => Schema::buildingId(),
             Payload::NAME => Schema::buildingName(),
+            Payload::USERS => JsonSchema::array(Schema::username()),
         ]);
     }
 

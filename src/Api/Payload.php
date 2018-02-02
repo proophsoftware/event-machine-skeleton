@@ -26,4 +26,5 @@ class Payload
     const SKIP = 'skip';
     const LIMIT = 'limit';
     const NAME = 'name';
+    const USERS = 'users';
 }
