@@ -1,26 +1,46 @@
 <doctype html />
 <html>
 <head></head>
-<body><h1>test</h1>
+<body><h1>UI Exchange</h1>
+<p>Status: <span id="status">connecting to websocket: ui-queue ...</span></p>
+<p>You'll see a notification when a new message arrives</p>
+<p>Double click notification to hide it.</p>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
 <script src="stomp.min.js"></script>
 <script>
-    // Stomp.js boilerplate
-    var client = Stomp.client('wss://' + window.location.hostname + ':15691/ws');
+    $(function () {
+      $.notify.defaults({
+        autoHide: false,
+        clickToHide: false,
+        position: "top center"
+      });
 
-    var on_connect = function(x) {
+      $("body").dblclick(function (e) {
+        if($(e.target).closest(".notifyjs-container").length) {
+          $(e.target).closest(".notifyjs-container").remove();
+        }
+      });
+
+      // Stomp.js boilerplate
+      var client = Stomp.client('wss://' + window.location.hostname + ':15691/ws');
+
+      var on_connect = function(x) {
+        $('#status').html("Connected to websocket: ui-queue");
+
         id = client.subscribe("ui-queue", function(d) {
-            console.log("received message", d.body);
+          var message = JSON.parse(d.body);
+          var notification = message.message_name + "\n\n" + JSON.stringify(message.payload, null, 2);
+          $.notify(notification, 'info');
         });
-    };
-    var on_error =  function() {
-        console.log('error');
-    };
-    client.connect('event-machine', 'event-machine', on_connect, on_error, '/event-machine');
-
-    window.setTimeout(function () {
-        console.log("send test");
-        //client.send('/topic/ui-exchange', {"content-type":"text/plain"}, "it works");
-    }, 1000);
+      };
+      var on_error =  function(x) {
+        var msg = "Websocket error occurred. Please check browser console for details.";
+        $.notify(msg, "error");
+        console.error('websocket error: ', x);
+      };
+      client.connect('event-machine', 'event-machine', on_connect, on_error, '/event-machine');
+    });
 </script>
 </body>
 </html>
