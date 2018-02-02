@@ -28,6 +28,8 @@ class Event implements EventMachineDescription
     const EVENT_CONTEXt = 'BuildingMgmt.';
 
     const BUILDING_ADDED = self::EVENT_CONTEXt.'BuildingAdded';
+    const USER_CHECKED_IN = self::EVENT_CONTEXt.'UserCheckedIn';
+    const DOUBLE_CHECK_IN_DETECTED = self::EVENT_CONTEXt.'DoubleCheckInDetected';
 
     /**
      * @param EventMachine $eventMachine
@@ -37,6 +39,16 @@ class Event implements EventMachineDescription
         $eventMachine->registerEvent(self::BUILDING_ADDED, JsonSchema::object([
             Payload::BUILDING_ID => Schema::buildingId(),
             Payload::NAME => Schema::buildingName(),
+        ]));
+
+        $eventMachine->registerEvent(self::USER_CHECKED_IN, JsonSchema::object([
+            Payload::BUILDING_ID => Schema::buildingId(),
+            Payload::NAME => Schema::username()
+        ]));
+
+        $eventMachine->registerEvent(self::DOUBLE_CHECK_IN_DETECTED, JsonSchema::object([
+            Payload::BUILDING_ID => Schema::buildingId(),
+            Payload::NAME => Schema::username()
         ]));
 
         /**

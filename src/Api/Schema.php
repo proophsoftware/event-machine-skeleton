@@ -78,4 +78,9 @@ class Schema
     {
         return JsonSchema::typeRef(Type::BUILDING);
     }
+
+    public static function username()
+    {
+        return JsonSchema::string()->withMinLength(1);
+    }
 }

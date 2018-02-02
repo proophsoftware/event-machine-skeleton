@@ -24,6 +24,7 @@ class Command implements EventMachineDescription
      * const REGISTER_USER = 'RegisterUser';
      */
     const ADD_BUILDING = 'AddBuilding';
+    const CHECK_IN_USER = 'CheckInUser';
 
     /**
      * @param EventMachine $eventMachine
@@ -33,6 +34,11 @@ class Command implements EventMachineDescription
         $eventMachine->registerCommand(self::ADD_BUILDING, JsonSchema::object([
             Payload::BUILDING_ID => Schema::buildingId(),
             Payload::NAME => Schema::buildingName(),
+        ]));
+
+        $eventMachine->registerCommand(self::CHECK_IN_USER, JsonSchema::object([
+            Payload::BUILDING_ID => Schema::buildingId(),
+            Payload::NAME => Schema::username(),
         ]));
 
         /**
