@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Api;
 
+use App\Infrastructure\Building\BuildingResolver;
 use App\Infrastructure\System\HealthCheckResolver;
 use Prooph\EventMachine\EventMachine;
 use Prooph\EventMachine\EventMachineDescription;
+use Prooph\EventMachine\JsonSchema\JsonSchema;
 
 class Query implements EventMachineDescription
 {
@@ -29,6 +31,9 @@ class Query implements EventMachineDescription
      * const FRIENDS = 'Friends';
      */
 
+    const BUILDING = Type::BUILDING;
+    const BUILDINGS = 'Buildings';
+
     /**
      * Default Query, used to perform health checks using messagebox or GraphQL endpoint
      */
@@ -36,6 +41,22 @@ class Query implements EventMachineDescription
 
     public static function describe(EventMachine $eventMachine): void
     {
+        $eventMachine->registerQuery(self::BUILDING, JsonSchema::object([
+            Payload::BUILDING_ID => Schema::buildingId(),
+        ]))
+            ->resolveWith(BuildingResolver::class)
+            ->returnType(Schema::building());
+
+        $eventMachine->registerQuery(
+            self::BUILDINGS,
+            JsonSchema::object([], array_merge([
+                Payload::NAME => JsonSchema::nullOr(Schema::buildingName())
+            ],
+                Schema::queryPagination()
+            )))
+            ->resolveWith(BuildingResolver::class)
+            ->returnType(JsonSchema::array(Schema::building()));
+
         //Default query: can be used to check if service is up and running
         $eventMachine->registerQuery(self::HEALTH_CHECK) //<-- Payload schema is optional for queries
             ->resolveWith(HealthCheckResolver::class) //<-- Service id (usually FQCN) to get resolver from DI container

@@ -7,6 +7,7 @@ namespace App\Api;
 use Prooph\EventMachine\JsonSchema\JsonSchema;
 use Prooph\EventMachine\JsonSchema\Type\StringType;
 use Prooph\EventMachine\JsonSchema\Type\TypeRef;
+use Prooph\EventMachine\JsonSchema\Type\UuidType;
 
 class Schema
 {
@@ -61,5 +62,20 @@ class Schema
     public static function iso8601DateTime(): StringType
     {
         return JsonSchema::string()->withPattern('^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$');
+    }
+
+    public static function buildingId(): UuidType
+    {
+        return JsonSchema::uuid();
+    }
+
+    public static function buildingName(): StringType
+    {
+        return JsonSchema::string()->withMinLength(1);
+    }
+
+    public static function building(): TypeRef
+    {
+        return JsonSchema::typeRef(Type::BUILDING);
     }
 }

@@ -6,6 +6,7 @@ namespace App\Api;
 
 use Prooph\EventMachine\EventMachine;
 use Prooph\EventMachine\EventMachineDescription;
+use Prooph\EventMachine\JsonSchema\JsonSchema;
 
 class Command implements EventMachineDescription
 {
@@ -22,13 +23,18 @@ class Command implements EventMachineDescription
      *
      * const REGISTER_USER = 'RegisterUser';
      */
-
+    const ADD_BUILDING = 'AddBuilding';
 
     /**
      * @param EventMachine $eventMachine
      */
     public static function describe(EventMachine $eventMachine): void
     {
+        $eventMachine->registerCommand(self::ADD_BUILDING, JsonSchema::object([
+            Payload::BUILDING_ID => Schema::buildingId(),
+            Payload::NAME => Schema::buildingName(),
+        ]));
+
         /**
          * Describe commands of the service and corresponding payload schema (used for input validation)
          *

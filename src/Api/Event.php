@@ -7,6 +7,7 @@ namespace App\Api;
 
 use Prooph\EventMachine\EventMachine;
 use Prooph\EventMachine\EventMachineDescription;
+use Prooph\EventMachine\JsonSchema\JsonSchema;
 
 class Event implements EventMachineDescription
 {
@@ -24,12 +25,20 @@ class Event implements EventMachineDescription
      * const EVENT_CONTEXT = 'MyContext.';
      * const USER_REGISTERED = self::EVENT_CONTEXT.'UserRegistered';
      */
+    const EVENT_CONTEXt = 'BuildingMgmt.';
+
+    const BUILDING_ADDED = self::EVENT_CONTEXt.'BuildingAdded';
 
     /**
      * @param EventMachine $eventMachine
      */
     public static function describe(EventMachine $eventMachine): void
     {
+        $eventMachine->registerEvent(self::BUILDING_ADDED, JsonSchema::object([
+            Payload::BUILDING_ID => Schema::buildingId(),
+            Payload::NAME => Schema::buildingName(),
+        ]));
+
         /**
          * Describe events produced or consumed by the service and corresponding payload schema (used for input validation)
          *
