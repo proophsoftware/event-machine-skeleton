@@ -219,3 +219,12 @@ Focus of the skeleton is to provide *an easy to use development environment*, he
 **Make sure to secure the containers before you deploy them anywhere!** You should build and use your own docker containers in production anyway.
 And if you cannot or don't want to use Docker then provide the needed infrastructure the way you prefer and just point event machine to it by adjusting configuration.
 
+## Powered by prooph software
+
+[![prooph software](https://github.com/codeliner/php-ddd-cargo-sample/blob/master/docs/assets/prooph-software-logo.png)](http://prooph.de)
+
+Event Machine is maintained by the [prooph software team](http://prooph-software.de/). The source code of Event Machine 
+is open sourced along with an API documentation and a getting started demo. Prooph software offers commercial support and workshops
+for Event Machine as well as for the [prooph components](http://getprooph.org/).
+
+If you are interested in this offer or need project support please [get in touch](http://getprooph.org/#get-in-touch).
