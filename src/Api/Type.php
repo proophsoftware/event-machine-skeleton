@@ -34,8 +34,17 @@ class Type implements EventMachineDescription
      * @see \App\Api\Query for more about query return types
      */
 
+    const BUILDING = Aggregate::BUILDING;
 
     const HEALTH_CHECK = 'HealthCheck';
+
+    private static function building(): ObjectType
+    {
+        return JsonSchema::object([
+            Payload::BUILDING_ID => Schema::buildingId(),
+            Payload::NAME => Schema::buildingName(),
+        ]);
+    }
 
     private static function healthCheck(): ObjectType
     {
@@ -49,6 +58,8 @@ class Type implements EventMachineDescription
      */
     public static function describe(EventMachine $eventMachine): void
     {
+        $eventMachine->registerType(self::BUILDING, self::building());
+
         //Register the HealthCheck type returned by @see \App\Api\Query::HEALTH_CHECK
         $eventMachine->registerType(self::HEALTH_CHECK, self::healthCheck());
 

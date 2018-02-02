@@ -20,7 +20,10 @@ class Payload
      * $username = $registerUser->get(Payload::USERNAME); //This is readable and eases refactoring in a larger code base.
      */
 
+    const BUILDING_ID = 'buildingId';
+
     //Predefined keys for query payloads, see App\Api\Schema::queryPagination() for further information
     const SKIP = 'skip';
     const LIMIT = 'limit';
+    const NAME = 'name';
 }

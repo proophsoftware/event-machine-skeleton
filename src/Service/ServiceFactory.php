@@ -2,8 +2,10 @@
 
 namespace App\Service;
 
+use App\Api\Aggregate;
 use App\Http\ErrorResponseGenerator;
 use App\Http\MessageSchemaMiddleware;
+use App\Infrastructure\Building\BuildingResolver;
 use App\Infrastructure\Logger\PsrErrorLogger;
 use App\Infrastructure\ServiceBus\CommandBus;
 use App\Infrastructure\ServiceBus\EventBus;
@@ -59,6 +61,17 @@ final class ServiceFactory
     public function setContainer(ContainerInterface $container): void
     {
         $this->container = $container;
+    }
+
+    //Query resolvers
+    public function buildingResolver(): BuildingResolver
+    {
+        return $this->makeSingleton(BuildingResolver::class, function () {
+            return new BuildingResolver(
+                AggregateProjector::aggregateCollectionName($this->eventMachine()->appVersion(), Aggregate::BUILDING),
+                $this->documentStore()
+            );
+        });
     }
 
     //HTTP endpoints
