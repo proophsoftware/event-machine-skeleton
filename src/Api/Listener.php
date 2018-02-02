@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Api;
 
+use App\Infrastructure\ServiceBus\UiExchange;
 use Prooph\EventMachine\EventMachine;
 use Prooph\EventMachine\EventMachineDescription;
 
@@ -12,6 +13,10 @@ class Listener implements EventMachineDescription
 
     public static function describe(EventMachine $eventMachine): void
     {
+        //Forward double check ins to the preconfigured rabbitMQ ui-exchange to simulate that we can notify
+        //security in case of a double check-in.
+        $eventMachine->on(Event::DOUBLE_CHECK_IN_DETECTED, UiExchange::class);
+
         /**
          * Register domain event listeners
          *
