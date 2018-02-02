@@ -11,9 +11,9 @@ $container = new \Prooph\EventMachine\Container\ReflectionBasedContainer(
     [
         \Prooph\EventMachine\EventMachine::SERVICE_ID_EVENT_STORE => \Prooph\EventStore\EventStore::class,
         \Prooph\EventMachine\EventMachine::SERVICE_ID_PROJECTION_MANAGER => \Prooph\EventStore\Projection\ProjectionManager::class,
-        \Prooph\EventMachine\EventMachine::SERVICE_ID_COMMAND_BUS => \Prooph\ServiceBus\CommandBus::class,
-        \Prooph\EventMachine\EventMachine::SERVICE_ID_EVENT_BUS => \Prooph\ServiceBus\EventBus::class,
-        \Prooph\EventMachine\EventMachine::SERVICE_ID_QUERY_BUS => \Prooph\ServiceBus\QueryBus::class,
+        \Prooph\EventMachine\EventMachine::SERVICE_ID_COMMAND_BUS => \App\Infrastructure\ServiceBus\CommandBus::class,
+        \Prooph\EventMachine\EventMachine::SERVICE_ID_EVENT_BUS => \App\Infrastructure\ServiceBus\EventBus::class,
+        \Prooph\EventMachine\EventMachine::SERVICE_ID_QUERY_BUS => \App\Infrastructure\ServiceBus\QueryBus::class,
         \Prooph\EventMachine\EventMachine::SERVICE_ID_DOCUMENT_STORE => \Prooph\EventMachine\Persistence\DocumentStore::class,
     ]
 );

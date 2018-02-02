@@ -2,8 +2,12 @@
 
 namespace App\Service;
 
+use App\Http\ErrorResponseGenerator;
 use App\Http\MessageSchemaMiddleware;
 use App\Infrastructure\Logger\PsrErrorLogger;
+use App\Infrastructure\ServiceBus\CommandBus;
+use App\Infrastructure\ServiceBus\EventBus;
+use App\Infrastructure\ServiceBus\QueryBus;
 use App\Infrastructure\System\HealthCheckResolver;
 use Codeliner\ArrayReader\ArrayReader;
 use Monolog\Handler\StreamHandler;
@@ -25,15 +29,11 @@ use Prooph\EventStore\Pdo\PostgresEventStore;
 use Prooph\EventStore\Pdo\Projection\PostgresProjectionManager;
 use Prooph\EventStore\Projection\ProjectionManager;
 use Prooph\EventStore\TransactionalActionEventEmitterEventStore;
-use Prooph\ServiceBus\CommandBus;
-use Prooph\ServiceBus\EventBus;
 use Prooph\ServiceBus\Message\HumusAmqp\AmqpMessageProducer;
-use Prooph\ServiceBus\QueryBus;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Zend\Diactoros\Response;
 use Zend\Stratigility\Middleware\ErrorHandler;
-use Zend\Stratigility\Middleware\ErrorResponseGenerator;
 
 final class ServiceFactory
 {
@@ -153,21 +153,30 @@ final class ServiceFactory
     public function commandBus(): CommandBus
     {
         return $this->makeSingleton(CommandBus::class, function () {
-            return new CommandBus();
+            $commandBus = new CommandBus();
+            $errorHandler = new \App\Infrastructure\ServiceBus\ErrorHandler();
+            $errorHandler->attachToMessageBus($commandBus);
+            return $commandBus;
         });
     }
 
     public function eventBus(): EventBus
     {
         return $this->makeSingleton(EventBus::class, function () {
-            return new EventBus();
+            $eventBus = new EventBus();
+            $errorHandler = new \App\Infrastructure\ServiceBus\ErrorHandler();
+            $errorHandler->attachToMessageBus($eventBus);
+            return $eventBus;
         });
     }
 
     public function queryBus(): QueryBus
     {
         return $this->makeSingleton(QueryBus::class, function () {
-            return new QueryBus();
+            $queryBus = new QueryBus();
+            $errorHandler = new \App\Infrastructure\ServiceBus\ErrorHandler();
+            $errorHandler->attachToMessageBus($queryBus);
+            return $queryBus;
         });
     }
 

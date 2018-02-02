@@ -14,7 +14,6 @@ $container = include 'config/container.php';
 //Note: this is important and needs to happen before further dependencies are pulled
 $env = getenv('PROOPH_ENV')?: 'prod';
 $devMode = $env === \Prooph\EventMachine\EventMachine::ENV_DEV;
-$container->get(\Prooph\EventMachine\EventMachine::class)->bootstrap($env, $devMode);
 
 $app = new \Zend\Stratigility\MiddlewarePipe();
 
@@ -26,7 +25,7 @@ $app->pipe(new \Zend\Expressive\Helper\BodyParams\BodyParamsMiddleware());
 
 $app->pipe(new \App\Http\OriginalUriMiddleware());
 
-$app->pipe('/api', function (Request $req) use($container) {
+$app->pipe('/api', function (Request $req) use($container, $env, $devMode) {
     /** @var FastRoute\Dispatcher $router */
     $router = require 'config/api_router.php';
 
@@ -47,6 +46,8 @@ $app->pipe('/api', function (Request $req) use($container) {
     if(!$container->has($route[1])) {
         throw new \RuntimeException("Http handler not found. Got " . $route[1]);
     }
+
+    $container->get(\Prooph\EventMachine\EventMachine::class)->bootstrap($env, $devMode);
 
     /** @var \Interop\Http\Server\RequestHandlerInterface $httpHandler */
     $httpHandler = $container->get($route[1]);
