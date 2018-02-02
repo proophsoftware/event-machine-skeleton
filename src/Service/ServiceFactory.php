@@ -21,6 +21,7 @@ use Prooph\EventMachine\Container\ServiceRegistry;
 use Prooph\EventMachine\EventMachine;
 use Prooph\EventMachine\GraphQL\Server;
 use Prooph\EventMachine\Http\MessageBox;
+use Prooph\EventMachine\Messaging\Message;
 use Prooph\EventMachine\Persistence\DocumentStore;
 use Prooph\EventMachine\Postgres\PostgresDocumentStore;
 use Prooph\EventMachine\Projecting\AggregateProjector;
@@ -207,7 +208,18 @@ final class ServiceFactory
                 new NoOpMessageConverter()
             );
 
-            return $messageProducer;
+            return new class($messageProducer) implements UiExchange {
+                private $producer;
+                public function __construct(AmqpMessageProducer $messageProducer)
+                {
+                    $this->producer = $messageProducer;
+                }
+
+                public function __invoke(Message $event): void
+                {
+                    $this->producer->__invoke($event);
+                }
+            };
         });
     }
 
