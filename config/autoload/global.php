@@ -6,6 +6,7 @@ namespace App\Config;
 use App\Api\Aggregate;
 use App\Api\Command;
 use App\Api\Event;
+use App\Api\Listener;
 use App\Api\Projection;
 use App\Api\Query;
 use App\Api\Type;
@@ -40,6 +41,7 @@ return [
             Query::class,
             Aggregate::class,
             Projection::class,
+            Listener::class,
         ]
     ]
 ];
