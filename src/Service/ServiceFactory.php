@@ -8,6 +8,7 @@ use App\Infrastructure\Logger\PsrErrorLogger;
 use App\Infrastructure\ServiceBus\CommandBus;
 use App\Infrastructure\ServiceBus\EventBus;
 use App\Infrastructure\ServiceBus\QueryBus;
+use App\Infrastructure\ServiceBus\UiExchange;
 use App\Infrastructure\System\HealthCheckResolver;
 use Codeliner\ArrayReader\ArrayReader;
 use Monolog\Handler\StreamHandler;
@@ -180,9 +181,9 @@ final class ServiceFactory
         });
     }
 
-    public function uiExchange(): AmqpMessageProducer
+    public function uiExchange(): UiExchange
     {
-        return $this->makeSingleton(AmqpMessageProducer::class, function () {
+        return $this->makeSingleton(UiExchange::class, function () {
            $this->assertMandatoryConfigExists('rabbit.connection');
 
             $connection = new \Humus\Amqp\Driver\AmqpExtension\Connection(
