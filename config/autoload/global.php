@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace App\Config;
 
-use App\Api\Aggregate;
 use App\Api\Command;
 use App\Api\Event;
+use App\Api\Handler;
 use App\Api\Listener;
 use App\Api\Projection;
 use App\Api\Query;
@@ -39,7 +39,7 @@ return [
             Command::class,
             Event::class,
             Query::class,
-            Aggregate::class,
+            Handler::class,
             Projection::class,
             Listener::class,
         ]

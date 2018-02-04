@@ -8,7 +8,7 @@ use App\Model\Building;
 use Prooph\EventMachine\EventMachine;
 use Prooph\EventMachine\EventMachineDescription;
 
-class Aggregate implements EventMachineDescription
+class Aggregate
 {
     /**
      * Define aggregate names using constants
@@ -18,47 +18,4 @@ class Aggregate implements EventMachineDescription
      * const USER = 'User';
      */
     const BUILDING = 'Building';
-
-
-    /**
-     * @param EventMachine $eventMachine
-     */
-    public static function describe(EventMachine $eventMachine): void
-    {
-        $eventMachine->process(Command::ADD_BUILDING)
-            ->withNew(self::BUILDING)
-            ->identifiedBy(Payload::BUILDING_ID)
-            ->handle([Building::class, 'add'])
-            ->recordThat(Event::BUILDING_ADDED)
-            ->apply([Building::class, 'whenBuildingAdd']);
-
-        $eventMachine->process(Command::CHECK_IN_USER)
-            ->withExisting(Aggregate::BUILDING)
-            ->handle([Building::class, 'checkInUser'])
-            ->recordThat(Event::USER_CHECKED_IN)
-            ->apply([Building::class, 'whenUserCheckedIn'])
-            ->orRecordThat(Event::DOUBLE_CHECK_IN_DETECTED)
-            ->apply([Building::class, 'whenDoubleCheckInDetected']);
-
-        /**
-         * Describe how your aggregates handle commands
-         *
-         * @example
-         *
-         * $eventMachine->process(Command::REGISTER_USER) <-- Command name of the command that is expected by the Aggregate's handle method
-         *      ->withNew(self::USER) //<-- aggregate type, defined as constant above, also tell event machine that a new Aggregate should be created
-         *      ->identifiedBy(Payload::USER_ID) //<-- Payload property (of all user related commands) that identify the addressed User
-         *      ->handle([User::class, 'register']) //<-- Aggregates are stateless and have static callable methods that can be linked to using PHP's callable array syntax
-         *      ->recordThat(Event::USER_REGISTERED) //<-- Event name of the event yielded by the Aggregate's handle method
-         *      ->apply([User::class, 'whenUserRegistered']) //<-- Aggregate method (again static) that is called when event is recorded
-         *      ->orRecordThat(Event::DOUBLE_REGISTRATION_DETECTED) //Alternative event that can be yielded by the Aggregate's handle method
-         *      ->apply([User::class, 'whenDoubleRegistrationDetected']); //Again the method that should be called in case above event is recorded
-         *
-         * $eventMachine->process(Command::CHANGE_USERNAME) //<-- User::changeUsername() expects a Command::CHANGE_USERNAME command
-         *      ->withExisting(self::USER) //<-- Aggregate should already exist, Event Machine uses Payload::USER_ID to load User from event store
-         *      ->handle([User::class, 'changeUsername'])
-         *      ->recordThat(Event::USERNAME_CHANGED)
-         *      ->apply([User::class, 'whenUsernameChanged']);
-         */
-    }
 }

@@ -6,39 +6,86 @@ namespace App\Model;
 
 use App\Api\Event;
 use App\Api\Payload;
-use App\Model\Building\State;
+use App\Model\Building\BuildingId;
 use Prooph\EventMachine\Messaging\Message;
 
-final class Building
+final class Building implements \JsonSerializable
 {
-    public static function add(Message $addBuilding): \Generator
+    /**
+     * @var BuildingId
+     */
+    private $buildingId;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string[]
+     */
+    private $users = [];
+
+    public static function add(BuildingId $buildingId, string $name): \Generator
     {
-        yield [Event::BUILDING_ADDED, $addBuilding->payload()];
+        yield [Event::BUILDING_ADDED, [
+            Payload::BUILDING_ID => $buildingId->toString(),
+            Payload::NAME => $name,
+        ]];
     }
 
-    public static function whenBuildingAdd(Message $buildingAdded): State
+    public static function whenAdded(Message $buildingAdded): self
     {
-        return State::fromArray($buildingAdded->payload());
+        return new self(
+            BuildingId::fromString($buildingAdded->get(Payload::BUILDING_ID)),
+            $buildingAdded->get(Payload::NAME)
+        );
     }
 
-    public static function checkInUser(State $state, Message $checkInUser): \Generator
+    private function __construct(BuildingId $buildingId, string $name)
     {
-        if($state->isCheckedIn($checkInUser->get(Payload::NAME))) {
-            yield [Event::DOUBLE_CHECK_IN_DETECTED, $checkInUser->payload()];
+        $this->buildingId = $buildingId;
+        $this->name = $name;
+    }
+
+    public function checkInUser(string $username): \Generator
+    {
+        if($this->isCheckedIn($username)) {
+            yield [Event::DOUBLE_CHECK_IN_DETECTED, [
+                Payload::BUILDING_ID => $this->buildingId->toString(),
+                Payload::NAME => $username,
+            ]];
             return;
         }
 
-        yield [Event::USER_CHECKED_IN, $checkInUser->payload()];
+        yield [Event::USER_CHECKED_IN, [
+            Payload::BUILDING_ID => $this->buildingId->toString(),
+            Payload::NAME => $username,
+        ]];
     }
 
-    public static function whenUserCheckedIn(State $state, Message $userCheckedIn): State
+    public function apply(Message $event): void
     {
-        return $state->checkIn($userCheckedIn->get(Payload::NAME));
+        switch ($event->messageName()) {
+            case Event::USER_CHECKED_IN:
+                $this->users[$event->get(Payload::NAME)] = null;
+                break;
+            default:
+                //no state change required
+        }
     }
 
-    public static function whenDoubleCheckInDetected(State $state, Message $doubleCheckInDetected): State
+    private function isCheckedIn(string $username): bool
     {
-        //no state chane needed at the moment, so we just return old state
-        return $state;
+        return array_key_exists($username, $this->users);
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            Payload::BUILDING_ID => $this->buildingId->toString(),
+            Payload::NAME => $this->name,
+            Payload::USERS => array_keys($this->users),
+        ];
     }
 }
