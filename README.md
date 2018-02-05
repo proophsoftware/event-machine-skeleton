@@ -77,12 +77,10 @@ Try the demo by adding a building using a GraphQL client to send requests:
 
 ```graphql
 mutation {
-  mutation {
-    AddBuilding(
-      buildingId:"07e16c58-8ea7-43d5-b26c-afc002967074", 
-      name:"prooph HQ"
-    )
-  }
+  AddBuilding(
+    buildingId:"07e16c58-8ea7-43d5-b26c-afc002967074", 
+    name:"prooph HQ"
+  )
 }
 
 # Response:
