@@ -42,17 +42,35 @@ class BaseTestCase extends TestCase
         ]);
     }
 
-    protected function assertRecordedEvent(string $eventName, array $payload = [], array $events): void
+    protected function assertRecordedEvent(string $eventName, array $payload, array $events, $assertNotRecorded = false): void
     {
         $isRecorded = false;
 
-        foreach ($events as [$evtName, $evtPayload]) {
+        foreach ($events as $evt) {
+            if($evt === null) {
+                continue;
+            }
+
+            [$evtName, $evtPayload] = $evt;
+
             if($eventName === $evtName) {
                 $isRecorded = true;
-                $this->assertEquals($payload, $evtPayload, "Payload of recorded event $evtName does not match with expected payload.");
+
+                if(!$assertNotRecorded) {
+                    $this->assertEquals($payload, $evtPayload, "Payload of recorded event $evtName does not match with expected payload.");
+                }
             }
         }
 
-        $this->assertTrue($isRecorded, "Event $eventName is not recorded");
+        if($assertNotRecorded) {
+            $this->assertFalse($isRecorded, "Event $eventName is recorded");
+        } else {
+            $this->assertTrue($isRecorded, "Event $eventName is not recorded");
+        }
+    }
+
+    protected function assertNotRecordedEvent(string $eventName, array $events): void
+    {
+        $this->assertRecordedEvent($eventName, [], $events, true);
     }
 }
