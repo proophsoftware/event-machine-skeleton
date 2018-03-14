@@ -45,7 +45,7 @@ class Query implements EventMachineDescription
             Payload::BUILDING_ID => Schema::buildingId(),
         ]))
             ->resolveWith(BuildingResolver::class)
-            ->returnType(Schema::building());
+            ->setReturnType(Schema::building());
 
         $eventMachine->registerQuery(
             self::BUILDINGS,
@@ -55,12 +55,12 @@ class Query implements EventMachineDescription
                 Schema::queryPagination()
             )))
             ->resolveWith(BuildingResolver::class)
-            ->returnType(JsonSchema::array(Schema::building()));
+            ->setReturnType(JsonSchema::array(Schema::building()));
 
         //Default query: can be used to check if service is up and running
         $eventMachine->registerQuery(self::HEALTH_CHECK) //<-- Payload schema is optional for queries
             ->resolveWith(HealthCheckResolver::class) //<-- Service id (usually FQCN) to get resolver from DI container
-            ->returnType(Schema::healthCheck()); //<-- Type returned by resolver, this is converted to a GraphQL type
+            ->setReturnType(Schema::healthCheck()); //<-- Type returned by resolver, this is converted to a GraphQL type
 
         /**
          * Register queries and if they have arguments (like filters, skip, limit, orderBy arguments)
