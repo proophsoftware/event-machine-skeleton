@@ -80,14 +80,14 @@ class Query implements EventMachineDescription
          * //user ids are passed to the resolver
          * $eventMachine->registerQuery(self::User, JsonSchema::object([Payload::USER_ID => Schema::userId()]))
          *      ->resolveWith(UserResolver::class)
-         *      ->returnType(Schema::user()); //<-- Pass type reference as return type, @see \App\Api\Schema::user() (in the comment) for details
+         *      ->setReturnType(Schema::user()); //<-- Pass type reference as return type, @see \App\Api\Schema::user() (in the comment) for details
          *
          * //Register a second query to load many Users, this query takes an optional Payload::ACTIVE argument
          * $eventMachine->registerQuery(self::Users, JsonSchema::object([], [
          *      Payload::ACTIVE => JsonSchema::nullOr(JsonSchema::boolean()) //<-- Note: an optional argument should also be nullable to work with GraphQL
          * ]))
          *  ->resolveWith(UsersResolver::class)
-         *  ->returnType(JsonSchema::array(Schema::user())); //<-- Return type is an array of Schema::user() (type reference to Type::USER)
+         *  ->setReturnType(JsonSchema::array(Schema::user())); //<-- Return type is an array of Schema::user() (type reference to Type::USER)
          */
     }
 }
