@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 chdir(dirname(__DIR__));
 
@@ -17,51 +18,52 @@ $devMode = $env === \Prooph\EventMachine\EventMachine::ENV_DEV;
 
 $app = new \Zend\Stratigility\MiddlewarePipe();
 
-$app->setResponsePrototype(new \Zend\Diactoros\Response());
-
 $app->pipe($container->get(\Zend\Stratigility\Middleware\ErrorHandler::class));
 
 $app->pipe(new \Zend\Expressive\Helper\BodyParams\BodyParamsMiddleware());
 
 $app->pipe(new \App\Http\OriginalUriMiddleware());
 
-$app->pipe('/api', function (Request $req) use($container, $env, $devMode) {
-    /** @var FastRoute\Dispatcher $router */
-    $router = require 'config/api_router.php';
+$app->pipe(\Zend\Stratigility\path(
+    '/api',
+    \Zend\Stratigility\middleware(function (Request $req, RequestHandler $handler) use($container, $env, $devMode): Response {
+        /** @var FastRoute\Dispatcher $router */
+        $router = require 'config/api_router.php';
 
-    $route = $router->dispatch($req->getMethod(), $req->getUri()->getPath());
+        $route = $router->dispatch($req->getMethod(), $req->getUri()->getPath());
 
-    if ($route[0] === FastRoute\Dispatcher::NOT_FOUND) {
-        return new \Zend\Diactoros\Response\EmptyResponse(404);
-    }
+        if ($route[0] === FastRoute\Dispatcher::NOT_FOUND) {
+            return new \Zend\Diactoros\Response\EmptyResponse(404);
+        }
 
-    if ($route[0] === FastRoute\Dispatcher::METHOD_NOT_ALLOWED) {
-        return new \Zend\Diactoros\Response\EmptyResponse(405);
-    }
+        if ($route[0] === FastRoute\Dispatcher::METHOD_NOT_ALLOWED) {
+            return new \Zend\Diactoros\Response\EmptyResponse(405);
+        }
 
-    foreach ($route[2] as $name => $value) {
-        $req = $req->withAttribute($name, $value);
-    }
+        foreach ($route[2] as $name => $value) {
+            $req = $req->withAttribute($name, $value);
+        }
 
-    if(!$container->has($route[1])) {
-        throw new \RuntimeException("Http handler not found. Got " . $route[1]);
-    }
+        if(!$container->has($route[1])) {
+            throw new \RuntimeException("Http handler not found. Got " . $route[1]);
+        }
 
-    $container->get(\Prooph\EventMachine\EventMachine::class)->bootstrap($env, $devMode);
+        $container->get(\Prooph\EventMachine\EventMachine::class)->bootstrap($env, $devMode);
 
-    /** @var \Interop\Http\Server\RequestHandlerInterface $httpHandler */
-    $httpHandler = $container->get($route[1]);
+        /** @var RequestHandler $httpHandler */
+        $httpHandler = $container->get($route[1]);
 
-    return $httpHandler->handle($req);
-});
+        return $httpHandler->handle($req);
+    })
+));
 
-$app->pipe('/', function (Request $request): Response {
+$app->pipe(\Zend\Stratigility\path('/', \Zend\Stratigility\middleware(function (Request $request, $handler): Response {
     //@TODO add homepage with infos about event-machine and the skeleton
     return new \Zend\Diactoros\Response\TextResponse("It works");
-});
+})));
 
 $server = \Zend\Diactoros\Server::createServer(
-    $app,
+    [$app, 'handle'],
     $_SERVER,
     $_GET,
     $_POST,
@@ -69,5 +71,5 @@ $server = \Zend\Diactoros\Server::createServer(
     $_FILES
 );
 
-$server->listen(new \Zend\Stratigility\NoopFinalHandler());
+$server->listen();
 
