@@ -4,10 +4,10 @@ declare(strict_types = 1);
 
 namespace App\Http;
 
-use Interop\Http\Server\MiddlewareInterface;
-use Interop\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 final class OriginalUriMiddleware implements MiddlewareInterface
 {
@@ -16,10 +16,11 @@ final class OriginalUriMiddleware implements MiddlewareInterface
      * response creation to a handler.
      *
      * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
      *
      * @return ResponseInterface
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $request = $request->withAttribute('original_uri', $request->getUri());
 

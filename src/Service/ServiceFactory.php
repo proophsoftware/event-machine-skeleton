@@ -227,7 +227,9 @@ final class ServiceFactory
     {
         return $this->makeSingleton(ErrorHandler::class, function () {
             $errorHandler = new ErrorHandler(
-                new Response(),
+                function () {
+                    return new Response();
+                },
                 new ErrorResponseGenerator($this->config->stringValue('environment', 'prod') === 'dev')
             );
 
