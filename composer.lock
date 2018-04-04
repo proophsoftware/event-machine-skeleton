@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4fcf95c1ca319daa273bbe1c782e906c",
+    "content-hash": "ce84059472b53a049692ba9e63ce1f01",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -157,58 +157,6 @@
                 "response"
             ],
             "time": "2017-02-09T16:10:21+00:00"
-        },
-        {
-            "name": "http-interop/http-middleware",
-            "version": "0.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/http-interop/http-middleware.git",
-                "reference": "b49e1f9f6c584e704317b563302e566b8ce11858"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/http-interop/http-middleware/zipball/b49e1f9f6c584e704317b563302e566b8ce11858",
-                "reference": "b49e1f9f6c584e704317b563302e566b8ce11858",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0",
-                "psr/http-message": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Interop\\Http\\Server\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for HTTP server-side middleware",
-            "keywords": [
-                "http",
-                "middleware",
-                "psr",
-                "psr-15",
-                "psr-7",
-                "request",
-                "response"
-            ],
-            "abandoned": "http-interop/http-server-middleware",
-            "time": "2017-09-18T15:27:03+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -794,16 +742,16 @@
         },
         {
             "name": "prooph/event-store-bus-bridge",
-            "version": "v3.1.0",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/prooph/event-store-bus-bridge.git",
-                "reference": "2cf9717a3387421b46d9c45c9a9f55e7a5463e78"
+                "reference": "bc2067ef9eb0e2ff3079854dc3330f8412d2d318"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/prooph/event-store-bus-bridge/zipball/2cf9717a3387421b46d9c45c9a9f55e7a5463e78",
-                "reference": "2cf9717a3387421b46d9c45c9a9f55e7a5463e78",
+                "url": "https://api.github.com/repos/prooph/event-store-bus-bridge/zipball/bc2067ef9eb0e2ff3079854dc3330f8412d2d318",
+                "reference": "bc2067ef9eb0e2ff3079854dc3330f8412d2d318",
                 "shasum": ""
             },
             "require": {
@@ -854,7 +802,7 @@
                 "cqrs",
                 "prooph"
             ],
-            "time": "2017-12-17T16:29:42+00:00"
+            "time": "2018-04-04T16:19:35+00:00"
         },
         {
             "name": "prooph/humus-amqp-producer",
@@ -935,16 +883,16 @@
         },
         {
             "name": "prooph/pdo-event-store",
-            "version": "v1.7.2",
+            "version": "v1.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/prooph/pdo-event-store.git",
-                "reference": "b89aad85b44b5c7bcb6134b3b0e700b88eaa0438"
+                "reference": "ba58e8eb15c31db9d1c6671ca50a1bf384dea07e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/prooph/pdo-event-store/zipball/b89aad85b44b5c7bcb6134b3b0e700b88eaa0438",
-                "reference": "b89aad85b44b5c7bcb6134b3b0e700b88eaa0438",
+                "url": "https://api.github.com/repos/prooph/pdo-event-store/zipball/ba58e8eb15c31db9d1c6671ca50a1bf384dea07e",
+                "reference": "ba58e8eb15c31db9d1c6671ca50a1bf384dea07e",
                 "shasum": ""
             },
             "require": {
@@ -998,7 +946,7 @@
             ],
             "description": "Prooph PDO EventStore",
             "homepage": "http://getprooph.org/",
-            "time": "2018-03-14T14:15:04+00:00"
+            "time": "2018-03-26T08:21:19+00:00"
         },
         {
             "name": "prooph/service-bus",
@@ -1139,22 +1087,21 @@
         },
         {
             "name": "proophsoftware/event-machine",
-            "version": "v1.0-alpha.7",
+            "version": "v0.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/proophsoftware/event-machine.git",
-                "reference": "7c12ecfe6d7567cc39be168aa0600b63a0ce3379"
+                "reference": "dd6407ef754ff0315878bdc4220819cfa4bf80b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/proophsoftware/event-machine/zipball/7c12ecfe6d7567cc39be168aa0600b63a0ce3379",
-                "reference": "7c12ecfe6d7567cc39be168aa0600b63a0ce3379",
+                "url": "https://api.github.com/repos/proophsoftware/event-machine/zipball/dd6407ef754ff0315878bdc4220819cfa4bf80b1",
+                "reference": "dd6407ef754ff0315878bdc4220819cfa4bf80b1",
                 "shasum": ""
             },
             "require": {
                 "codeliner/array-reader": "^1.2",
                 "fig/http-message-util": "^1.1",
-                "http-interop/http-middleware": "^0.5",
                 "justinrainbow/json-schema": "^5.2",
                 "php": "^7.1",
                 "prooph/common": "^4.0",
@@ -1165,6 +1112,7 @@
                 "prooph/snapshot-store": "^1.0",
                 "psr/container": "^1.0",
                 "psr/http-message": "^1.0",
+                "psr/http-server-middleware": "^1.0",
                 "react/promise": "^2.5",
                 "roave/security-advisories": "dev-master",
                 "webonyx/graphql-php": "^0.11.5",
@@ -1203,7 +1151,7 @@
             ],
             "description": "Opinionated Event Sourcing Framework based on prooph components",
             "homepage": "http://prooph.de/",
-            "time": "2018-03-15T09:23:33+00:00"
+            "time": "2018-04-04T17:09:02+00:00"
         },
         {
             "name": "proophsoftware/postgres-document-store",
@@ -1642,12 +1590,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "4a272b63452f4d8ff0d48a759e59db9359a9b5b7"
+                "reference": "c83f6aa0ed08f680c012656d411d1b7c94003012"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4a272b63452f4d8ff0d48a759e59db9359a9b5b7",
-                "reference": "4a272b63452f4d8ff0d48a759e59db9359a9b5b7",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/c83f6aa0ed08f680c012656d411d1b7c94003012",
+                "reference": "c83f6aa0ed08f680c012656d411d1b7c94003012",
                 "shasum": ""
             },
             "conflict": {
@@ -1678,8 +1626,8 @@
                 "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
                 "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
                 "dompdf/dompdf": ">=0.6,<0.6.2",
-                "drupal/core": ">=8,<8.4.5",
-                "drupal/drupal": ">=8,<8.4.5",
+                "drupal/core": ">=7,<7.58|>=8,<8.4.6|>=8.5,<8.5.1",
+                "drupal/drupal": ">=7,<7.58|>=8,<8.4.6|>=8.5,<8.5.1",
                 "erusev/parsedown": "<1.7",
                 "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.3|>=5.4,<5.4.11.3|>=2017.8,<2017.8.1.1|>=2017.12,<2017.12.2.1",
                 "firebase/php-jwt": "<2",
@@ -1688,10 +1636,11 @@
                 "gree/jose": "<=2.2",
                 "gregwar/rst": "<1.0.3",
                 "guzzlehttp/guzzle": ">=6,<6.2.1|>=4.0.0-rc2,<4.2.4|>=5,<5.3.1",
-                "illuminate/auth": ">=4,<4.0.99|>=4.1,<4.1.26",
+                "illuminate/auth": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.10",
                 "illuminate/database": ">=4,<4.0.99|>=4.1,<4.1.29",
+                "illuminate/encryption": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
                 "joomla/session": "<1.3.1",
-                "laravel/framework": ">=4,<4.0.99|>=4.1,<4.1.29",
+                "laravel/framework": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
                 "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
                 "magento/magento1ce": ">=1.5.0.1,<1.9.3.2",
                 "magento/magento1ee": ">=1.9,<1.14.3.2",
@@ -1793,7 +1742,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2018-03-22T21:16:54+00:00"
+            "time": "2018-04-02T06:47:13+00:00"
         },
         {
             "name": "webonyx/graphql-php",
