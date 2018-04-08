@@ -40,7 +40,7 @@ final class MessageSchemaMiddleware implements RequestHandlerInterface
 
         return new JsonResponse(array_merge(
             ['messageBox' => (string)$messageBoxUri],
-            $this->eventMachine->messageSchemas()
+            $this->eventMachine->messageBoxSchema()
         ));
     }
 }
