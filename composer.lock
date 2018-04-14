@@ -1091,12 +1091,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/proophsoftware/event-machine.git",
-                "reference": "998b67df2842b118fbd65737e0d9ca0110d53680"
+                "reference": "ceb21c11d5899c3da37b48a09af686a40663be52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/proophsoftware/event-machine/zipball/998b67df2842b118fbd65737e0d9ca0110d53680",
-                "reference": "998b67df2842b118fbd65737e0d9ca0110d53680",
+                "url": "https://api.github.com/repos/proophsoftware/event-machine/zipball/ceb21c11d5899c3da37b48a09af686a40663be52",
+                "reference": "ceb21c11d5899c3da37b48a09af686a40663be52",
                 "shasum": ""
             },
             "require": {
@@ -1150,7 +1150,7 @@
             ],
             "description": "Opinionated Event Sourcing Framework based on prooph components",
             "homepage": "http://prooph.de/",
-            "time": "2018-04-14T21:28:07+00:00"
+            "time": "2018-04-14T22:19:52+00:00"
         },
         {
             "name": "proophsoftware/postgres-document-store",

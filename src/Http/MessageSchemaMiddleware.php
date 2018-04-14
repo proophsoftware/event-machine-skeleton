@@ -60,7 +60,7 @@ final class MessageSchemaMiddleware implements RequestHandlerInterface
 
         $componentSchemas = [];
 
-        foreach ($eventMachineSchema['components']['schemas'] ?? [] as $componentName => $componentSchema) {
+        foreach ($eventMachineSchema['definitions'] ?? [] as $componentName => $componentSchema) {
             $componentSchemas[$componentName] = $this->jsonSchemaToOpenApiSchema($componentSchema);
         }
 
@@ -107,7 +107,7 @@ final class MessageSchemaMiddleware implements RequestHandlerInterface
                 'description' => $messageSchema['response']['description'] ?? $messageName,
                 'content' => [
                     'application/json' => [
-                        'schema' => $messageSchema['response']
+                        'schema' => $this->jsonSchemaToOpenApiSchema($messageSchema['response'])
                     ]
                 ]
             ];
@@ -190,6 +190,10 @@ final class MessageSchemaMiddleware implements RequestHandlerInterface
 
         if(isset($jsonSchema['items']) && is_array($jsonSchema['items'])) {
             $jsonSchema['items'] = $this->jsonSchemaToOpenApiSchema($jsonSchema['items']);
+        }
+
+        if(isset($jsonSchema['$ref'])) {
+            $jsonSchema['$ref'] = str_replace('definitions', 'components/schemas', $jsonSchema['$ref']);
         }
 
         return $jsonSchema;
