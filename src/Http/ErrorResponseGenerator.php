@@ -38,6 +38,10 @@ final class ErrorResponseGenerator
 
         $response = $response->withAddedHeader('content-type', 'application/json');
 
+        if($e instanceof MessageDispatchException) {
+            $e = $e->getPrevious();
+        }
+
         $message = $this->developmentMode? $e->getMessage() : 'Internal Error';
         $details = $this->developmentMode? $e->getTraceAsString() : '';
 
