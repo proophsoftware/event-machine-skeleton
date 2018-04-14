@@ -38,11 +38,14 @@ final class ErrorResponseGenerator
 
         $response = $response->withAddedHeader('content-type', 'application/json');
 
+        $message = $this->developmentMode? $e->getMessage() : 'Internal Error';
+        $details = $this->developmentMode? $e->getTraceAsString() : '';
+
         $json = json_encode([
-            'errors' => [
-                FormattedError::createFromException($e, $this->developmentMode)
+            'error' => [
+                'message' => $message,
+                'details' => $details
             ],
-            'data' => []
         ]);
 
         $body = $response->getBody();
