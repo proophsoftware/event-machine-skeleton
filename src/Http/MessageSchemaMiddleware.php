@@ -167,9 +167,9 @@ final class MessageSchemaMiddleware implements RequestHandlerInterface
             $type = null;
             $containsNull = false;
             foreach ($jsonSchema['type'] as $possibleType) {
-                if($possibleType !== null) {
+                if(mb_strtolower($possibleType) !== 'null') {
                     if($type) {
-                        throw new \RuntimeException("Got JSON Schema type defined as an array with more than one type + NULL set.");
+                        throw new \RuntimeException("Got JSON Schema type defined as an array with more than one type + NULL set. " . json_encode($jsonSchema));
                     }
                     $type = $possibleType;
                 } else {
