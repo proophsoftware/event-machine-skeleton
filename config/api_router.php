@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 return \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $r) {
     $r->addRoute(
-        ['GET', 'POST'],
-        '/graphql',
-        \Prooph\EventMachine\GraphQL\Server::class
-    );
-
-    $r->addRoute(
         ['POST'],
         '/messagebox',
         \Prooph\EventMachine\Http\MessageBox::class
