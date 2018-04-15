@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ccc7b6bae8e08a7d24cb5e07bc551fe",
+    "content-hash": "46532f59ed29103d5d166c1082f5f181",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1087,16 +1087,16 @@
         },
         {
             "name": "proophsoftware/event-machine",
-            "version": "dev-rm_graphql",
+            "version": "v0.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/proophsoftware/event-machine.git",
-                "reference": "ceb21c11d5899c3da37b48a09af686a40663be52"
+                "reference": "f071248ef530e4ec7254cb839af8561d369ebbdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/proophsoftware/event-machine/zipball/ceb21c11d5899c3da37b48a09af686a40663be52",
-                "reference": "ceb21c11d5899c3da37b48a09af686a40663be52",
+                "url": "https://api.github.com/repos/proophsoftware/event-machine/zipball/f071248ef530e4ec7254cb839af8561d369ebbdf",
+                "reference": "f071248ef530e4ec7254cb839af8561d369ebbdf",
                 "shasum": ""
             },
             "require": {
@@ -1150,7 +1150,7 @@
             ],
             "description": "Opinionated Event Sourcing Framework based on prooph components",
             "homepage": "http://prooph.de/",
-            "time": "2018-04-14T22:19:52+00:00"
+            "time": "2018-04-15T02:52:46+00:00"
         },
         {
             "name": "proophsoftware/postgres-document-store",
@@ -3587,8 +3587,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "roave/security-advisories": 20,
-        "proophsoftware/event-machine": 20
+        "roave/security-advisories": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
