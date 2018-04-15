@@ -13,13 +13,7 @@ class Query implements EventMachineDescription
     /**
      * Define query names using constants
      *
-     * Note: If you use the GraphQL integration then make sure that your query names can be used as type names in GraphQL.
-     * Dots for example do not work: MyContext.Something
-     * Either use MyContext_Something or just MyContextSomething. Event machine is best suited for single context
-     * services anyway, so in most cases you don't need to set a context in front of your queries because the context
-     * is defined by the service boundaries itself.
-     *
-     * For a clean and simple API (when using GraphQL integration) it is recommended to just use the name of the "thing"
+     * For a clean and simple API it is recommended to just use the name of the "thing"
      * you want to return as query name, see example for user queries:
      *
      * @example
@@ -30,7 +24,7 @@ class Query implements EventMachineDescription
      */
 
     /**
-     * Default Query, used to perform health checks using messagebox or GraphQL endpoint
+     * Default Query, used to perform health checks using the messagebox endpoint
      */
     const HEALTH_CHECK = 'HealthCheck';
 
@@ -39,7 +33,7 @@ class Query implements EventMachineDescription
         //Default query: can be used to check if service is up and running
         $eventMachine->registerQuery(self::HEALTH_CHECK) //<-- Payload schema is optional for queries
             ->resolveWith(HealthCheckResolver::class) //<-- Service id (usually FQCN) to get resolver from DI container
-            ->setReturnType(Schema::healthCheck()); //<-- Type returned by resolver, this is converted to a GraphQL type
+            ->setReturnType(Schema::healthCheck()); //<-- Type returned by resolver
 
         /**
          * Register queries and if they have arguments (like filters, skip, limit, orderBy arguments)
@@ -63,7 +57,7 @@ class Query implements EventMachineDescription
          *
          * //Register a second query to load many Users, this query takes an optional Payload::ACTIVE argument
          * $eventMachine->registerQuery(self::Users, JsonSchema::object([], [
-         *      Payload::ACTIVE => JsonSchema::nullOr(JsonSchema::boolean()) //<-- Note: an optional argument should also be nullable to work with GraphQL
+         *      Payload::ACTIVE => JsonSchema::nullOr(JsonSchema::boolean()) 
          * ]))
          *  ->resolveWith(UsersResolver::class)
          *  ->setReturnType(JsonSchema::array(Schema::user())); //<-- Return type is an array of Schema::user() (type reference to Type::USER)
