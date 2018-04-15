@@ -29,8 +29,7 @@ class Type implements EventMachineDescription
      *      ])
      * }
      *
-     * Queries should only use type references as return types (at least when return type is an object), this enables a
-     * seamless GraphQL integration and gives you a nice GraphQL schema documentation out-of-the-box
+     * Queries should only use type references as return types (at least when return type is an object).
      * @see \App\Api\Query for more about query return types
      */
 
@@ -71,26 +70,6 @@ class Type implements EventMachineDescription
          * @example
          *
          * $eventMachine->registerType(self::USER, self::user());
-         *
-         * Note: If you want to use objects as command or query arguments, for example a command like this:
-         * $eventMachine->registerCommand(Command::REGISTER_USER, JsonSchema::object([
-         *      Payload::USER => JsonSchema::object([ ... ])
-         * ]));
-         *
-         * You should register an InputType instead. This would look something like that:
-         *
-         * const USER_INPUT = 'UserInput';
-         *
-         * $eventMachine->registerInputType(self::USER_INPUT, self::user()); //<-- Note we can reuse the user schema definition
-         *                                                                   //as long as it does NOT contain other type references to RETURN TYPES!
-         *                                                                   //But we give this type another name (Input suffix) so that GraphQL can
-         *                                                                   //distinguish between a User type used as return type
-         *                                                                   //and a UserInput type used as command or query input argument
-         *
-         * $eventMachine->registerCommand(Command::REGISTER_USER, JsonSchema::object([
-         *      Payload::USER => JsonSchema::typeRef(self::USER_INPUT) //<-- even better if you move that to a \App\Api\Schema::userInput() method
-         *                                                             // but we show it this way here to ease the example
-         * ]));
          */
     }
 }

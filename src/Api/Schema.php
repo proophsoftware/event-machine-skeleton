@@ -13,7 +13,7 @@ class Schema
 {
     /**
      * This class acts as a central place for all schema related information.
-     * In event machine you use JSON Schema for message validation and also for GraphQL types (more about that in the docs)
+     * In event machine you use JSON Schema for message validation.
      *
      * It is a good idea to use static methods for schema definitions so that you don't need to repeat them when
      * defining message payloads or query return types.
