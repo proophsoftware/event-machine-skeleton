@@ -19,7 +19,6 @@ use Prooph\EventMachine\Container\ContainerChain;
 use Prooph\EventMachine\Container\EventMachineContainer;
 use Prooph\EventMachine\Container\ServiceRegistry;
 use Prooph\EventMachine\EventMachine;
-use Prooph\EventMachine\GraphQL\Server;
 use Prooph\EventMachine\Http\MessageBox;
 use Prooph\EventMachine\Messaging\Message;
 use Prooph\EventMachine\Persistence\DocumentStore;
@@ -73,13 +72,6 @@ final class ServiceFactory
     {
         return $this->makeSingleton(MessageSchemaMiddleware::class, function () {
             return new MessageSchemaMiddleware($this->eventMachine());
-        });
-    }
-
-    public function graphQlServer(): Server
-    {
-        return $this->makeSingleton(Server::class, function () {
-            return $this->eventMachine()->graphqlServer();
         });
     }
 
