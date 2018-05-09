@@ -62,4 +62,9 @@ class Schema
     {
         return JsonSchema::string()->withPattern('^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$');
     }
+    
+    public static function iso8601Date(): StringType
+    {
+        return JsonSchema::string()->withPattern('^\d{4}-\d\d-\d\d$');
+    }
 }
