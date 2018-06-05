@@ -34,7 +34,8 @@ use Prooph\ServiceBus\Message\HumusAmqp\AmqpMessageProducer;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Zend\Diactoros\Response;
-use Zend\Stratigility\Middleware\ErrorHandler;
+use Zend\ProblemDetails\ProblemDetailsMiddleware;
+use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 
 final class ServiceFactory
 {
@@ -215,15 +216,15 @@ final class ServiceFactory
         });
     }
 
-    public function httpErrorHandler($environment = 'prod'): ErrorHandler
+    public function problemDetailsMiddleware(): ProblemDetailsMiddleware
     {
-        return $this->makeSingleton(ErrorHandler::class, function () {
-            $errorHandler = new ErrorHandler(
-                function () {
+        return $this->makeSingleton(ProblemDetailsMiddleware::class, function() {
+            $errorHandler = new ProblemDetailsMiddleware(new ProblemDetailsResponseFactory(
+                function() {
                     return new Response();
                 },
-                new ErrorResponseGenerator($this->config->stringValue('environment', 'prod') === 'dev')
-            );
+                $this->config->stringValue('environment', 'prod') === 'dev'
+            ));
 
             $errorHandler->attachListener(new PsrErrorLogger($this->logger()));
 
