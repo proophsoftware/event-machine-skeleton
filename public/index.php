@@ -18,7 +18,7 @@ $devMode = $env === \Prooph\EventMachine\EventMachine::ENV_DEV;
 
 $app = new \Zend\Stratigility\MiddlewarePipe();
 
-$app->pipe($container->get(\Zend\Stratigility\Middleware\ErrorHandler::class));
+$app->pipe($container->get(\Zend\ProblemDetails\ProblemDetailsMiddleware::class));
 
 $app->pipe(new \Zend\Expressive\Helper\BodyParams\BodyParamsMiddleware());
 

@@ -30,11 +30,15 @@ use Prooph\EventStore\Pdo\PostgresEventStore;
 use Prooph\EventStore\Pdo\Projection\PostgresProjectionManager;
 use Prooph\EventStore\Projection\ProjectionManager;
 use Prooph\EventStore\TransactionalActionEventEmitterEventStore;
+use Prooph\ServiceBus\Exception\MessageDispatchException;
 use Prooph\ServiceBus\Message\HumusAmqp\AmqpMessageProducer;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Zend\Diactoros\Response;
-use Zend\Stratigility\Middleware\ErrorHandler;
+use Zend\ProblemDetails\ProblemDetailsMiddleware;
+use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 
 final class ServiceFactory
 {
@@ -215,16 +219,30 @@ final class ServiceFactory
         });
     }
 
-    public function httpErrorHandler($environment = 'prod'): ErrorHandler
+    public function problemDetailsMiddleware(): ProblemDetailsMiddleware
     {
-        return $this->makeSingleton(ErrorHandler::class, function () {
-            $errorHandler = new ErrorHandler(
-                function () {
+        return $this->makeSingleton(ProblemDetailsMiddleware::class, function() {
+            $isDevEnvironment = $this->config->stringValue('environment', 'prod') === 'dev';
+
+            $problemDetailsResponseFactory = new class(
+                function() {
                     return new Response();
                 },
-                new ErrorResponseGenerator($this->config->stringValue('environment', 'prod') === 'dev')
-            );
+                $isDevEnvironment
+            ) extends ProblemDetailsResponseFactory {
+                public function createResponseFromThrowable(
+                    ServerRequestInterface $request,
+                    \Throwable $e
+                ) : ResponseInterface {
+                    if($e instanceof MessageDispatchException) {
+                        $e = $e->getPrevious();
+                    }
 
+                    return parent::createResponseFromThrowable($request, $e);
+                }
+            };
+
+            $errorHandler = new ProblemDetailsMiddleware($problemDetailsResponseFactory);
             $errorHandler->attachListener(new PsrErrorLogger($this->logger()));
 
             return $errorHandler;
