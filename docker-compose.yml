@@ -12,14 +12,14 @@ services:
       - .:/var/www
 
   php:
-    image: prooph/php:7.1-fpm
+    image: prooph/php:7.2-fpm
     volumes:
       - .:/var/www
     env_file:
       - ./app.env
 
   event_machine_projection:
-    image: prooph/php:7.1-cli
+    image: prooph/php:7.2-cli
     volumes:
       - .:/app
     depends_on:
