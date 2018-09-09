@@ -12,24 +12,24 @@ services:
       - .:/var/www
 
   php:
-    image: prooph/php:7.1-fpm
+    image: prooph/php:7.2-fpm
     volumes:
       - .:/var/www
     env_file:
       - ./app.env
 
   event_machine_projection:
-      image: prooph/php:7.1-cli
-      volumes:
-        - .:/app
-      depends_on:
-        - postgres
-      command: php /app/bin/event_machine_projection.php
-      # Needed so that projection is automatically restarted when new events are registered in event machine
-      # which are not yet known in the long-running projection process, see https://github.com/proophsoftware/event-machine-skeleton/issues/3
-      restart: on-failure
-      env_file:
-        - ./app.env
+    image: prooph/php:7.2-cli
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+    command: php /app/bin/event_machine_projection.php
+    # Needed so that projection is automatically restarted when new events are registered in event machine
+    # which are not yet known in the long-running projection process, see https://github.com/proophsoftware/event-machine-skeleton/issues/3
+    restart: on-failure
+    env_file:
+      - ./app.env
 
   rabbit:
     image: prooph/rabbitmq
