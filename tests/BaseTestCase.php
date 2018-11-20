@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace AppTest;
 
 use PHPUnit\Framework\TestCase;
+use Prooph\EventMachine\Container\ContainerChain;
 use Prooph\EventMachine\Container\EventMachineContainer;
 use Prooph\EventMachine\EventMachine;
 use Prooph\EventMachine\Messaging\Message;
+use Prooph\EventMachine\Runtime\Flavour;
+use Prooph\EventMachine\Runtime\PrototypingFlavour;
 
 class BaseTestCase extends TestCase
 {
@@ -16,9 +19,15 @@ class BaseTestCase extends TestCase
      */
     protected $eventMachine;
 
+    /**
+     * @var Flavour
+     */
+    protected $flavour;
+
     protected function setUp()
     {
         $this->eventMachine = new EventMachine();
+        $this->flavour = new PrototypingFlavour();
 
         $config = include __DIR__ . '/../config/autoload/global.php';
 
@@ -26,7 +35,12 @@ class BaseTestCase extends TestCase
             $this->eventMachine->load($description);
         }
 
-        $this->eventMachine->initialize(new EventMachineContainer($this->eventMachine));
+        $this->eventMachine->initialize(
+            new ContainerChain(
+                new FlavourContainer($this->flavour),
+                new EventMachineContainer($this->eventMachine)
+            )
+        );
     }
 
     protected function tearDown()
