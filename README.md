@@ -22,9 +22,7 @@ event machine and the skeleton structure. To run the demo you have to clone the 
 `composer create-project` so that your local copy is still connected to the github repo.
 
 *Note: Event Machine is very flexible in the way how you organize your code. The skeleton just gives an example of a possible structure.
-The default way is to use static aggregate methods as pure functions. However, it is also possible to use stateful OOP aggregates with a slightly 
-different structure. If you prefer the OOP way you can checkout the "demo-oop" branch instead. Set up steps are identical. 
-If you're unsure try both branches and see what coding style you prefer most.*
+The default way is to use static aggregate methods as pure functions. However, it is also possible to use stateful OOP aggregates. Take a look at the [tutorial](https://proophsoftware.github.io/event-machine/tutorial/) for more information.
 
 ```bash
 $ git clone https://github.com/proophsoftware/event-machine-skeleton.git prooph-building-mgmt
